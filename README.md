@@ -307,7 +307,7 @@ gantt
     M6: Observability & CI       :m6, 2026-04-11, 2026-05-02
 
     section Endless Expansion
-    M7: Optional Fun Zone        :m7, 2026-05-03, 2026-12-31
+    M7: Optional Fun Zone        :m7, 2026-05-03, 2026-06-31
 ```
 
 ---
