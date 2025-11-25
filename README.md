@@ -8,6 +8,7 @@
 CritterStack is a hands-on learning project: a whimsical ecosystem simulator built to explore backend architecture, microservices, distributed data, event-driven patterns, and clean API design.
 
 The premise is simple:
+
 The **Department of Peculiar Creatures** has reopened its dusty archives and needs a modern platform to catalog, monitor, and occasionally wrangle the strange fauna under its care. You’ll build that platform as a set of independent but cooperating microservices.
 
 This project focuses on learning:
@@ -28,13 +29,13 @@ The goal isn’t perfection — it’s *iteration*. Every service, improvement, 
 
 CritterStack consists of a small collection of microservices, each responsible for a slice of the ecosystem. The initial services are:
 
-- **Creature Service** — manages creature identities, traits, stats, and lifecycle.
-- **Biome Service** — defines environments and biome rules that influence creatures.
-- **Event Service** — records cross-service interactions and ecosystem history.
-- **API Gateway** — a unified entrypoint for clients (CLI, UI, other services).
-- **Shared Observability Stack** — logs, metrics, and tracing.
+- **Creature Service** — manages creature identities, traits, stats, and lifecycle
+- **Biome Service** — defines environments and biome rules
+- **Event Service** — append-only historical event store
+- **API Gateway** — unified entrypoint for all clients
+- **Observability Stack** — logs, metrics, tracing
 
-Below is the very first architecture sketch.
+### Architecture Diagram
 
 ```mermaid
 flowchart LR
@@ -59,43 +60,45 @@ flowchart LR
 ### **Creature Service**
 Handles:
 - Creature creation
-- Attributes and traits
-- Internal rules (growth, randomness, events)
+- Attributes & traits
+- Domain rules (growth, stats, quirks)
 
-Tech suggestions:
+Tech:
 - Node.js + Fastify
 - Prisma + Postgres
-- Zod for API validation
+- Zod validation
+
+---
 
 ### **Biome Service**
 Handles:
-- Biomes, climates, and regions
-- Habitat-specific rules
+- Biomes, climates, and special rules
 - Creature–biome compatibility
 
-Tech suggestions:
+Tech:
 - Django REST Framework
 - Postgres
-- Celery (optional later)
+
+---
 
 ### **Event Service**
 Handles:
-- Logging interactions
-- Time-based events
-- “Ecosystem memory”
-- Append-only storage
+- Append-only event log
+- Ecosystem history
+- Filtering & querying
 
-Tech suggestions:
+Tech:
 - Node.js
 - DynamoDB
-- EventBridge or a tiny queue later on
+
+---
 
 ### **API Gateway**
-A single interface to all services.
+The single external touchpoint for all services.
 
-Tech options:
+Tech:
 - Node.js
-- Express / Fastify
+- Express or Fastify
 - OpenAPI contract-first design
 
 ---
@@ -105,26 +108,28 @@ Tech options:
 ### **Prerequisites**
 - Node.js (LTS)
 - Python 3.10+
-- Docker (optional but recommended)
-- Postgres running locally (Docker or local install)
-- AWS local DynamoDB (DynamoDB Local or docker image)
+- Docker (recommended)
+- Postgres
+- DynamoDB Local (docker or local install)
 
 ### **Local Setup**
 
-Clone the project:
+Clone the repo:
 
 ```bash
 git clone git@github.com:ElleWhitePB/CritterStack.git
 cd CritterStack
 ```
 
-Install dependencies once services exist. For now, this is placeholder text:
+Install service dependencies when they exist:
+
 ```bash
 cd creature-service
 npm install
 ```
 
-Spin up databases (example for Docker Compose):
+Start databases (example):
+
 ```bash
 docker compose up -d
 ```
@@ -133,152 +138,154 @@ docker compose up -d
 
 ## Development Workflow
 
-This repo follows a clean but beginner-friendly workflow:
+### Branches
 
-### **Branches**
-- `main` — your stable, working branch
-- `develop` — your active development branch
-- feature branches:
-  - `feature/creature-endpoints`
-  - `feature/biome-db-model`
+- `main` — stable
+- `develop` — active development
+- `feature/*` — work branches
 
-### **Commit Style**
+### Commit Style
+
 ```
 feat: add creature creation endpoint
-fix: correct biome climate validation
-refactor: extract event publisher logic
-docs: add API contract for Creature Service
+fix: correct biome validation
+refactor: extract event publishing
+docs: add API contract
 chore: update dependencies
 ```
 
-### **Pull Requests**
-PRs should include:
+### Pull Requests
+Include:
 - What changed
-- Why it changed
-- How to test it
-- Anything risky to watch for
-
-Future you will thank you.
+- Why
+- How to test
+- Risks / considerations
 
 ---
 
 ## Project Milestones (Learning Roadmap)
 
-CritterStack evolves through a series of milestones designed to build backend, microservice, and system-design skills while staying manageable for a part-time schedule. Each milestone expands the Department of Peculiar Creatures’ ecosystem in logical layers.
+Each milestone focuses on a distinct backend skillset.
+Taken together, they build a full distributed ecosystem.
 
 ---
 
 ### **M1: Creature Service MVP**
-Foundation of the ecosystem. Establish the first domain service, Postgres, Prisma, and a clean API.
 
-**Includes:**
-- Initialize the `creature-service` and project structure
-- Add Docker Compose + Postgres config
-- Create Prisma schema + migrations
-- Implement:
-  - `POST /creatures`
-  - `GET /creatures/:id`
-- Add request validation
-- Add `/health` endpoint
-- Add basic tests
-- Document the creature service
+Kickstart the entire project with the first domain service and database layer.
+
+Includes:
+- Initialize Node service
+- Docker Compose + Postgres
+- Prisma schema & migrations
+- `POST /creatures`
+- `GET /creatures/:id`
+- Zod validation
+- `/health` endpoint
+- Basic tests
+- Documentation
 
 ---
 
 ### **M2: Biome Service MVP**
-Build the environment layer using Django + DRF + Postgres.
 
-**Includes:**
-- Create Django project + `biomes` app
-- Add Postgres integration
-- Implement Biome model
-- Add DRF serializers + views
-- Implement:
-  - `POST /biomes`
-  - `GET /biomes`
-- Add `/health` endpoint
-- Add integration tests
-- Document biome rules
+Bring in Django and DRF to establish a second service with its own domain.
+
+Includes:
+- Django + DRF project
+- Postgres integration
+- Biome model
+- Serializers + views
+- `POST /biomes`
+- `GET /biomes`
+- `/health`
+- Integration tests
+- Documentation
 
 ---
 
 ### **M3: Event Service MVP**
-Create the ecosystem’s historical log using DynamoDB with an append-only event store.
 
-**Includes:**
-- Scaffold the `event-service`
-- Configure DynamoDB Local (or LocalStack)
-- Create events table
-- Implement:
-  - `POST /events` (append-only)
-  - `GET /events` with filters
-- Add basic validation
-- Add `/health` endpoint
-- Write append-only behavior tests
-- Document event schemas and event types
+Append-only history with DynamoDB.
+
+Includes:
+- Service scaffold
+- DynamoDB Local
+- Events table
+- `POST /events` append-only
+- `GET /events` w/ filters
+- `/health`
+- Validation
+- Tests
+- Documentation
 
 ---
 
 ### **M4: API Gateway MVP**
-Create a unified API entrypoint that routes clean, validated requests to all internal services.
 
-**Includes:**
-- Scaffold the API Gateway
-- Add proxy routes for:
-  - `/creatures/*`
-  - `/biomes/*`
-  - `/events/*`
-- Add request validation
-- Add error handling middleware
-- Add `/health` endpoint
-- Create initial OpenAPI schema
-- Document the gateway
+Unified routing, validation, and documentation.
+
+Includes:
+- Gateway scaffold
+- Proxy routes for all services
+- Input validation
+- Error-handling middleware
+- `/health`
+- OpenAPI spec
+- Documentation
 
 ---
 
 ### **M5: Evolution Engine**
-Add an intelligence layer: a worker that mutates creatures over time based on rules and environmental context.
 
-**Includes:**
-- Scaffold worker service
-- Add Redis (BullMQ or RQ) for jobs
-- Create scheduled evolution ticks
-- Fetch creatures and biomes
-- Implement mutation rule engine
+Intelligence layer for automated creature evolution.
+
+Includes:
+- Worker scaffold
+- Redis (BullMQ or RQ)
+- Scheduled evolution ticks
+- Fetch creatures/biomes
+- Mutation rule engine
 - Append mutation events
-- PATCH updated creatures
-- Add idempotency keys
-- Add logging + tracing IDs
-- Document evolution logic
+- PATCH updates
+- Idempotency keys
+- Logging + tracing
+- Documentation
 
 ---
 
 ### **M6: Observability & CI**
-Improve reliability, debugging, and development quality.
 
-**Includes:**
-- Add GitHub Actions CI
-- Run unit tests on push + PR
-- Add linting + type checking
-- Add structured JSON logs
-- Add tracing IDs
-- Add optional `/metrics` endpoints
-- Improve documentation for local development
-- Add Docker Compose debug overrides
+Improved reliability, debuggability, and dev experience.
+
+Includes:
+- GitHub Actions CI
+- Unit tests
+- Linting + type checking
+- Structured logs
+- Tracing IDs
+- Optional `/metrics`
+- Debug Docker Compose configs
+- Documentation
 
 ---
 
 ### **M7: Optional Fun Zone**
-A creative sandbox for expanding the CritterStack world.
 
-**Ideas:**
+An open sandbox for creative expansions.
+
+Ideas:
 - Creature interaction engine
 - Inter-biome migration
-- Rare anomalies / magical events
-- Creature relationships (rivalry, friendship, predation)
-- Mini UI (React or Ember)
+- Rare anomalies
+- Relationships (predator/rival/friend)
+- Mini UI (React/Ember)
 - Creature sprite generator
 - Phenomena service
+
+---
+
+## Timeline
 
 ```mermaid
 gantt
@@ -301,7 +308,7 @@ gantt
 
     section Endless Expansion
     M7: Optional Fun Zone        :m7, 2026-05-03, 2026-12-31
-
+```
 
 ---
 
@@ -314,7 +321,7 @@ It was established to catalog unnatural fauna, study bizarre habitats, and keep 
 Unfortunately, all of this was tracked in dusty filing cabinets, folklore scribbles, and one deeply haunted spreadsheet.
 
 CritterStack is the department’s attempt to modernize its research.
-You're the new backend engineer who has to figure out how to build a distributed system sturdy enough to handle:
+You're the new backend engineer tasked with building a distributed system sturdy enough to handle:
 
 - shapeshifting organisms
 - ecosystems that ignore physics
@@ -327,20 +334,25 @@ The department believes in you, mostly because everyone else quit.
 ---
 
 ## Roadmap (Future Ideas)
-- Creature interaction engine
+
+- Full creature interaction engine
 - Turn-based evolution tick
-- A tiny UI using React or Ember
-- Cross-service tracing
-- Retry logic & backoff strategies
+- UI dashboard (React/Ember)
+- Distributed tracing
+- Retry/backoff logic
 - Event replay
-- Creature breeding (chaos mode)
-- A “phenomena service” for magical anomalies
+- Creature breeding
+- Phenomena service
 
 ---
 
 ## License
 
+(Choose a license soon — or release the creatures upon trespassers.)
+
 ---
 
 ## Contact
-If you find a creature loose in the ducts, please contact Facilities. They stopped responding last Tuesday, but we remain optimistic.
+
+If you find a creature loose in the ducts, please contact Facilities.
+They stopped responding last Tuesday, but we remain optimistic.
