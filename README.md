@@ -164,34 +164,144 @@ Future you will thank you.
 
 ## Project Milestones (Learning Roadmap)
 
-### **Milestone 1 — Boot the Project**
-- Set up folder structure
-- Create empty service skeletons
-- Add Docker Compose for Postgres + Dynamo
-- Write the first endpoints (`GET /health`)
-- Commit early, commit often
+CritterStack evolves through a series of milestones designed to build backend, microservice, and system-design skills while staying manageable for a part-time schedule. Each milestone expands the Department of Peculiar Creatures’ ecosystem in logical layers.
 
-### **Milestone 2 — Creature Service MVP**
-- Postgres migrations
-- Prisma schema
-- `POST /creatures`
-- `GET /creatures/:id`
-- Basic validation
+---
 
-### **Milestone 3 — Biome Service MVP**
-- Django project + app
-- Postgres models
-- Basic CRUD
+### **M1: Creature Service MVP**
+Foundation of the ecosystem. Establish the first domain service, Postgres, Prisma, and a clean API.
 
-### **Milestone 4 — Event Service MVP**
-- Dynamo table
-- Append event
-- Fetch timeline
+**Includes:**
+- Initialize the `creature-service` and project structure
+- Add Docker Compose + Postgres config
+- Create Prisma schema + migrations
+- Implement:
+  - `POST /creatures`
+  - `GET /creatures/:id`
+- Add request validation
+- Add `/health` endpoint
+- Add basic tests
+- Document the creature service
 
-### **Milestone 5 — API Gateway**
-- Route requests to services
-- Handle errors gracefully
-- Add OpenAPI doc
+---
+
+### **M2: Biome Service MVP**
+Build the environment layer using Django + DRF + Postgres.
+
+**Includes:**
+- Create Django project + `biomes` app
+- Add Postgres integration
+- Implement Biome model
+- Add DRF serializers + views
+- Implement:
+  - `POST /biomes`
+  - `GET /biomes`
+- Add `/health` endpoint
+- Add integration tests
+- Document biome rules
+
+---
+
+### **M3: Event Service MVP**
+Create the ecosystem’s historical log using DynamoDB with an append-only event store.
+
+**Includes:**
+- Scaffold the `event-service`
+- Configure DynamoDB Local (or LocalStack)
+- Create events table
+- Implement:
+  - `POST /events` (append-only)
+  - `GET /events` with filters
+- Add basic validation
+- Add `/health` endpoint
+- Write append-only behavior tests
+- Document event schemas and event types
+
+---
+
+### **M4: API Gateway MVP**
+Create a unified API entrypoint that routes clean, validated requests to all internal services.
+
+**Includes:**
+- Scaffold the API Gateway
+- Add proxy routes for:
+  - `/creatures/*`
+  - `/biomes/*`
+  - `/events/*`
+- Add request validation
+- Add error handling middleware
+- Add `/health` endpoint
+- Create initial OpenAPI schema
+- Document the gateway
+
+---
+
+### **M5: Evolution Engine**
+Add an intelligence layer: a worker that mutates creatures over time based on rules and environmental context.
+
+**Includes:**
+- Scaffold worker service
+- Add Redis (BullMQ or RQ) for jobs
+- Create scheduled evolution ticks
+- Fetch creatures and biomes
+- Implement mutation rule engine
+- Append mutation events
+- PATCH updated creatures
+- Add idempotency keys
+- Add logging + tracing IDs
+- Document evolution logic
+
+---
+
+### **M6: Observability & CI**
+Improve reliability, debugging, and development quality.
+
+**Includes:**
+- Add GitHub Actions CI
+- Run unit tests on push + PR
+- Add linting + type checking
+- Add structured JSON logs
+- Add tracing IDs
+- Add optional `/metrics` endpoints
+- Improve documentation for local development
+- Add Docker Compose debug overrides
+
+---
+
+### **M7: Optional Fun Zone**
+A creative sandbox for expanding the CritterStack world.
+
+**Ideas:**
+- Creature interaction engine
+- Inter-biome migration
+- Rare anomalies / magical events
+- Creature relationships (rivalry, friendship, predation)
+- Mini UI (React or Ember)
+- Creature sprite generator
+- Phenomena service
+
+```mermaid
+gantt
+    title CritterStack Development Timeline
+    dateFormat  YYYY-MM-DD
+
+    section Core Services
+    M1: Creature Service MVP     :m1, 2025-11-25, 2025-12-20
+    M2: Biome Service MVP        :m2, 2026-01-05, 2026-01-25
+    M3: Event Service MVP        :m3, 2026-01-26, 2026-02-20
+
+    section Integration
+    M4: API Gateway MVP          :m4, 2026-02-21, 2026-03-07
+
+    section Intelligence Layer
+    M5: Evolution Engine         :m5, 2026-03-08, 2026-04-10
+
+    section Platform Quality
+    M6: Observability & CI       :m6, 2026-04-11, 2026-05-02
+
+    section Endless Expansion
+    M7: Optional Fun Zone        :m7, 2026-05-03, 2026-12-31
+
 
 ---
 
