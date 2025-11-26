@@ -1,0 +1,8 @@
+{
+  "name": "creature-service",
+  "version": "0.1.0",
+  "main": "src/index.js",
+  "scripts": {
+    "dev": "node src/index.js"
+  }
+}

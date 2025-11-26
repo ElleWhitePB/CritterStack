@@ -1,0 +1,5 @@
+{
+  "name": "evolution-engine",
+  "version": "0.1.0",
+  "main": "src/worker.js"
+}
