@@ -12,3 +12,10 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
+model Creature {
+  id        String   @id @default(uuid())
+  name      String
+  species   String
+  createdAt DateTime @default(now())
+}
