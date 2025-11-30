@@ -57,20 +57,56 @@ flowchart LR
 
 ## Services at a Glance
 
-### **Creature Service**
-Handles:
-- Creature creation
-- Attributes & traits
-- Domain rules (growth, stats, quirks)
+### **Creature Service** ✅ **LIVE**
+The first service is fully operational!
 
-Tech:
-- Node.js + Fastify
-- Prisma + Postgres
+**Implemented:**
+- ✅ Creature CRUD operations (Create, Read)
+- ✅ RESTful API with Express
+- ✅ PostgreSQL database with Prisma ORM
+- ✅ Zod validation
+- ✅ Health check endpoint
+- ✅ CORS enabled
+- ✅ 100% test coverage on service layer
+
+**Tech:**
+- Node.js + Express 5
+- Prisma + PostgreSQL
 - Zod validation
+- Jest testing
+
+**Endpoints:**
+- `GET /health` - Service health
+- `GET /creatures` - List all creatures
+- `GET /creatures/:id` - Get creature by ID
+- `POST /creatures` - Create new creature
+
+[📖 Full Documentation](./creature-service/README.md)
 
 ---
 
-### **Biome Service**
+### **Frontend** ✅ **LIVE**
+A whimsical web interface for managing creatures.
+
+**Features:**
+- ✅ View all creatures in a magical card layout
+- ✅ Search creature by ID
+- ✅ Create new creatures with form
+- ✅ Species dropdown with lore display
+- ✅ Random name generator
+- ✅ Toast notifications
+- ✅ Responsive design with nature theme
+
+**Tech:**
+- React + Vite
+- Modern CSS with gradients and animations
+- Fetch API for backend communication
+
+**Access:** `http://localhost:5173` (when running)
+
+---
+
+### **Biome Service** 🚧 **PLANNED**
 Handles:
 - Biomes, climates, and special rules
 - Creature–biome compatibility
@@ -81,7 +117,7 @@ Tech:
 
 ---
 
-### **Event Service**
+### **Event Service** 🚧 **PLANNED**
 Handles:
 - Append-only event log
 - Ecosystem history
@@ -93,7 +129,7 @@ Tech:
 
 ---
 
-### **API Gateway**
+### **API Gateway** 🚧 **PLANNED**
 The single external touchpoint for all services.
 
 Tech:
@@ -103,14 +139,70 @@ Tech:
 
 ---
 
-## Getting Started
+## Quick Start
+
+Want to see it in action? Here's how to run the current implementation:
+
+### **Prerequisites**
+- Node.js (LTS version recommended)
+- Docker & Docker Compose
+- Git
+
+### **Run the Full Stack**
+
+```bash
+# 1. Clone the repository
+git clone git@github.com:ElleWhitePB/CritterStack.git
+cd CritterStack
+
+# 2. Start the database
+cd docker
+docker compose up -d
+cd ..
+
+# 3. Set up and start the backend (in terminal 1)
+cd creature-service
+npm install
+npx prisma migrate dev
+npm run dev
+# Backend runs on http://localhost:3000
+
+# 4. Set up and start the frontend (in terminal 2)
+cd frontend
+npm install
+npm run dev
+# Frontend runs on http://localhost:5173
+```
+
+### **Try It Out**
+
+1. Open your browser to `http://localhost:5173`
+2. Click "Get All Creatures" to see existing creatures
+3. Use "Create Creature" to add a new one:
+   - Enter a name (or click 🎲 for a random name)
+   - Choose a species from the dropdown
+   - Read the species lore
+   - Click "Create Creature"
+4. Use "Get by ID" to fetch a specific creature
+
+### **Run Tests**
+
+```bash
+cd creature-service
+npm test                # Run all tests
+npm run test:coverage   # Run with coverage report
+```
+
+---
+
+## Getting Started (Detailed)
 
 ### **Prerequisites**
 - Node.js (LTS)
-- Python 3.10+
+- Python 3.10+ (for future services)
 - Docker (recommended)
-- Postgres
-- DynamoDB Local (docker or local install)
+- PostgreSQL
+- DynamoDB Local (for future Event Service)
 
 ### **Local Setup**
 
@@ -121,17 +213,59 @@ git clone git@github.com:ElleWhitePB/CritterStack.git
 cd CritterStack
 ```
 
-Install service dependencies when they exist:
+Install service dependencies:
 
 ```bash
 cd creature-service
 npm install
+npx prisma migrate dev
 ```
 
-Start databases (example):
+Start databases:
 
 ```bash
+cd docker
 docker compose up -d
+```
+
+---
+
+## Project Structure
+
+```
+CritterStack/
+├── creature-service/          # ✅ Backend API service
+│   ├── src/
+│   │   ├── db/               # Prisma client
+│   │   ├── routes/           # Express routes
+│   │   ├── schemas/          # Zod validation
+│   │   ├── services/         # Business logic
+│   │   └── index.js          # Entry point
+│   ├── tests/                # Unit tests (100% coverage)
+│   ├── prisma/               # Database schema & migrations
+│   ├── jest.config.js
+│   ├── package.json
+│   └── README.md
+│
+├── frontend/                  # ✅ React web interface
+│   ├── src/
+│   │   ├── components/       # React components
+│   │   ├── constants/        # Species data
+│   │   ├── services/         # API client
+│   │   ├── utils/            # Helper functions
+│   │   ├── App.jsx           # Main app component
+│   │   └── App.css           # Styling
+│   ├── package.json
+│   └── vite.config.js
+│
+├── docker/                    # ✅ Database containers
+│   └── docker-compose.yml    # PostgreSQL setup
+│
+├── biome-service/             # 🚧 Planned
+├── event-service/             # 🚧 Planned
+├── api-gateway/               # 🚧 Planned
+│
+└── README.md                  # This file
 ```
 
 ---
@@ -170,11 +304,12 @@ Taken together, they build a full distributed ecosystem.
 
 ---
 
-### **M1: Creature Service MVP**
+### **M1: Creature Service MVP** ✅ **COMPLETED**
 
-Kickstart the entire project with the first domain service and database layer.
+**Goal:** Kickstart the entire project with the first domain service and database layer.
 
-Includes:
+#### Original Plan
+The initial milestone was designed to establish the foundation:
 - Initialize Node service
 - Docker Compose + Postgres
 - Prisma schema & migrations
@@ -184,6 +319,92 @@ Includes:
 - `/health` endpoint
 - Basic tests
 - Documentation
+
+**Original Tech Stack:**
+- Node.js + Fastify
+- Prisma + Postgres
+- Zod validation
+
+#### What Was Actually Implemented
+
+**Core Requirements (All Met):**
+- ✅ Node.js service with Express 5 (chose Express over Fastify)
+- ✅ Docker Compose with PostgreSQL
+- ✅ Prisma ORM with pg adapter
+- ✅ Database schema and migrations
+- ✅ `POST /creatures` - Create new creatures
+- ✅ `GET /creatures/:id` - Get creature by ID
+- ✅ `GET /health` - Health check endpoint
+- ✅ Zod validation for request bodies
+- ✅ Basic tests → **Exceeded with 100% coverage**
+- ✅ Documentation → **Comprehensive API docs**
+
+**Additional Features (Beyond Original Scope):**
+- ✅ `GET /creatures` - List all creatures (not in original plan)
+- ✅ CORS enabled for frontend integration
+- ✅ Comprehensive unit tests with Jest (100% service layer coverage)
+- ✅ Test coverage reporting and thresholds
+- ✅ Detailed README with troubleshooting guide
+
+**Bonus: React Frontend (Not in Original Plan)**
+A complete web interface was added to demonstrate the API:
+- ✅ Modern UI with whimsical magical nature theme
+- ✅ Get all creatures with card display
+- ✅ Get creature by ID with search
+- ✅ Create creature form with species dropdown
+- ✅ Species lore information display
+- ✅ Random name generator with "a little help here" button
+- ✅ Toast notifications for success/error feedback
+- ✅ Responsive design with animations
+- ✅ 10 unique species with custom lore
+
+**Final Tech Stack:**
+- Backend: Node.js, Express 5, Prisma, PostgreSQL, Zod
+- Frontend: React, Vite
+- Testing: Jest with 100% service layer coverage
+- Database: PostgreSQL in Docker
+- Styling: Custom CSS with gradients and animations
+
+#### Key Decisions & Deviations
+
+**Express vs Fastify:**
+Chose Express 5 over Fastify for:
+- Broader ecosystem and community support
+- Simpler learning curve for the project
+- Excellent middleware ecosystem
+
+**Added Frontend:**
+While not in the original plan, the frontend provides:
+- Visual demonstration of the API
+- Better understanding of CORS and client-server interaction
+- User-friendly way to test endpoints
+- Foundation for future UI development
+
+#### How to Run
+```bash
+# Start database
+cd docker && docker compose up -d
+
+# Start backend (terminal 1)
+cd creature-service
+npm install
+npx prisma migrate dev
+npm run dev
+# Runs on http://localhost:3000
+
+# Start frontend (terminal 2)
+cd frontend
+npm install
+npm run dev
+# Runs on http://localhost:5173
+```
+
+#### Lessons Learned
+-Resolved Docker ↔ Postgres connectivity failures by correcting container networking, environment variables, and port configuration, resulting in a stable local development environment.
+-Updated the creature ID strategy and adjusted the Prisma schema, migrations, and service logic to eliminate type and insertion inconsistencies.
+-Corrected routing flow issues so requests consistently reached the intended controller and service layers.
+-Implemented proper request validation to prevent malformed payloads from causing database errors or inconsistent writes.
+-Refactored early controller logic to separate database operations into the service layer, improving clarity and maintainability.
 
 ---
 
