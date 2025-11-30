@@ -14,7 +14,7 @@ function App() {
   const [toast, setToast] = useState(null);
   const [selectedSpecies, setSelectedSpecies] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const creaturesPerPage = 8;
+  const creaturesPerPage = 6;
 
   const showToast = (message, type = "success") => {
     setToast({ message, type });
