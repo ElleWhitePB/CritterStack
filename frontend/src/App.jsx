@@ -27,7 +27,7 @@ function App() {
     try {
       const data = await api.getAllCreatures();
       setCreatures(data);
-      showToast(`Loaded ${data.length} creatures successfully!`);
+      showToast(`Found ${data.length} creatures`);
     } catch (error) {
       showToast(error.message, "error");
     } finally {
