@@ -68,7 +68,7 @@ function App() {
       const data = await api.getCreatureById(creatureId);
       setSelectedCreature(data);
       showToast("Creature found!");
-    } catch (error) {
+    } catch {
       showToast(`Could not fetch creature with ID ${creatureId}`, "error");
       setSelectedCreature(null);
     } finally {
