@@ -20,7 +20,13 @@ function App() {
     setToast({ message, type });
   };
 
+  const resetForm = () => {
+    setNewCreature({ name: "", species: "" });
+    setSelectedSpecies(null);
+  };
+
   const handleGetAllCreatures = async () => {
+    resetForm();
     setLoading(true);
     setSelectedCreature(null);
     setCurrentPage(1); // Reset to first page when loading new data
@@ -62,6 +68,7 @@ function App() {
       showToast("Please enter a creature ID", "error");
       return;
     }
+    resetForm();
     setLoading(true);
     setCreatures([]);
     try {
