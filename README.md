@@ -489,7 +489,7 @@ gantt
 
 ---
 
-## Lore
+## 📖 Lore
 
 Long before cloud infrastructure and compliance audits, the **Department of Peculiar Creatures** operated out of a forgotten government basement.
 
