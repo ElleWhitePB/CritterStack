@@ -88,6 +88,10 @@ function App() {
       showToast("Please enter a creature name", "error");
       return;
     }
+    if (!newCreature.species) {
+      showToast("Please select a species", "error");
+      return;
+    }
     setLoading(true);
     try {
       const created = await api.createCreature(newCreature);
@@ -105,7 +109,7 @@ function App() {
     }
   };
 
-  const handlegeneratePeculiarName = () => {
+  const handleGeneratePeculiarName = () => {
     const name = generatePeculiarName();
     setNewCreature({ ...newCreature, name });
   };
@@ -245,7 +249,7 @@ function App() {
                 />
                 <button
                   type="button"
-                  onClick={handlegeneratePeculiarName}
+                  onClick={handleGeneratePeculiarName}
                   className="btn btn-help"
                 >
                   🎲 a little help here
