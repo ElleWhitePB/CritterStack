@@ -55,7 +55,26 @@ flowchart LR
 
 ---
 
-## Services at a Glance
+## Project at a Glance
+
+### **Frontend** ✅ **LIVE**
+A whimsical web interface for managing creatures.
+
+**Features:**
+- ✅ View all creatures in a magical card layout
+- ✅ Search creature by ID
+- ✅ Create new creatures with form
+- ✅ Species dropdown with lore display
+- ✅ Random name generator
+- ✅ Toast notifications
+- ✅ Responsive design with nature theme
+
+**Tech:**
+- React + Vite
+- Modern CSS with gradients and animations
+- Fetch API for backend communication
+
+**Access:** `http://localhost:5173` (when running)
 
 ### **Creature Service** ✅ **LIVE**
 The first service is fully operational!
@@ -84,25 +103,6 @@ The first service is fully operational!
 [📖 Full Documentation](./creature-service/README.md)
 
 ---
-
-### **Frontend** ✅ **LIVE**
-A whimsical web interface for managing creatures.
-
-**Features:**
-- ✅ View all creatures in a magical card layout
-- ✅ Search creature by ID
-- ✅ Create new creatures with form
-- ✅ Species dropdown with lore display
-- ✅ Random name generator
-- ✅ Toast notifications
-- ✅ Responsive design with nature theme
-
-**Tech:**
-- React + Vite
-- Modern CSS with gradients and animations
-- Fetch API for backend communication
-
-**Access:** `http://localhost:5173` (when running)
 
 ---
 
@@ -270,32 +270,6 @@ CritterStack/
 
 ---
 
-## Development Workflow
-
-### Branches
-
-- `main` — stable
-- `develop` — active development
-- `feature/*` — work branches
-
-### Commit Style
-
-```
-feat: add creature creation endpoint
-fix: correct biome validation
-refactor: extract event publishing
-docs: add API contract
-chore: update dependencies
-```
-
-### Pull Requests
-Include:
-- What changed
-- Why
-- How to test
-- Risks / considerations
-
----
 
 ## Project Milestones (Learning Roadmap)
 
@@ -380,31 +354,13 @@ While not in the original plan, the frontend provides:
 - User-friendly way to test endpoints
 - Foundation for future UI development
 
-#### How to Run
-```bash
-# Start database
-cd docker && docker compose up -d
-
-# Start backend (terminal 1)
-cd creature-service
-npm install
-npx prisma migrate dev
-npm run dev
-# Runs on http://localhost:3000
-
-# Start frontend (terminal 2)
-cd frontend
-npm install
-npm run dev
-# Runs on http://localhost:5173
-```
 
 #### Lessons Learned
--Resolved Docker ↔ Postgres connectivity failures by correcting container networking, environment variables, and port configuration, resulting in a stable local development environment.
--Updated the creature ID strategy and adjusted the Prisma schema, migrations, and service logic to eliminate type and insertion inconsistencies.
--Corrected routing flow issues so requests consistently reached the intended controller and service layers.
--Implemented proper request validation to prevent malformed payloads from causing database errors or inconsistent writes.
--Refactored early controller logic to separate database operations into the service layer, improving clarity and maintainability.
+- Resolved Docker ↔ Postgres connectivity failures by correcting container networking, environment variables, and port configuration, resulting in a stable local development environment.
+- Updated the creature ID strategy and adjusted the Prisma schema, migrations, and service logic to eliminate type and insertion inconsistencies.
+- Corrected routing flow issues so requests consistently reached the intended controller and service layers.
+- Implemented proper request validation to prevent malformed payloads from causing database errors or inconsistent writes.
+- Refactored early controller logic to separate database operations into the service layer, improving clarity and maintainability.
 
 ---
 
