@@ -44,10 +44,16 @@ function App() {
       setSelectedCreature(data);
       showToast("Creature found!");
     } catch (error) {
-      showToast(error.message, "error");
+      showToast(`Could not fetch creature with ID ${creatureId}`, "error");
       setSelectedCreature(null);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleIdKeyDown = (e) => {
+    if (e.key === "Enter") {
+      handleGetById();
     }
   };
 
@@ -135,6 +141,7 @@ function App() {
               type="number"
               value={creatureId}
               onChange={(e) => setCreatureId(e.target.value)}
+              onKeyDown={handleIdKeyDown}
               placeholder="Enter creature ID"
               className="input"
             />
@@ -169,6 +176,7 @@ function App() {
                   type="text"
                   value={newCreature.name}
                   onChange={(e) => setNewCreature({ ...newCreature, name: e.target.value })}
+                  onKeyDown={handleIdKeyDown}
                   placeholder="Enter creature name"
                   className="input"
                 />
