@@ -13,6 +13,8 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [toast, setToast] = useState(null);
   const [selectedSpecies, setSelectedSpecies] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const creaturesPerPage = 8;
 
   const showToast = (message, type = "success") => {
     setToast({ message, type });
@@ -21,6 +23,7 @@ function App() {
   const handleGetAllCreatures = async () => {
     setLoading(true);
     setSelectedCreature(null);
+    setCurrentPage(1); // Reset to first page when loading new data
     try {
       const data = await api.getAllCreatures();
       setCreatures(data);
@@ -30,6 +33,28 @@ function App() {
     } finally {
       setLoading(false);
     }
+  };
+
+  // Pagination calculations
+  const indexOfLastCreature = currentPage * creaturesPerPage;
+  const indexOfFirstCreature = indexOfLastCreature - creaturesPerPage;
+  const currentCreatures = creatures.slice(indexOfFirstCreature, indexOfLastCreature);
+  const totalPages = Math.ceil(creatures.length / creaturesPerPage);
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  const handlePrevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  const handlePageClick = (pageNumber) => {
+    setCurrentPage(pageNumber);
   };
 
   const handleGetById = async () => {
@@ -120,16 +145,54 @@ function App() {
           </button>
 
           {creatures.length > 0 && (
-            <div className="creatures-list">
-              {creatures.map((creature) => (
-                <div key={creature.id} className="creature-card">
-                  <h3>{creature.name}</h3>
-                  <p><strong>Species:</strong> {creature.species}</p>
-                  <p><strong>ID:</strong> {creature.id}</p>
-                  <p><strong>Created:</strong> {new Date(creature.createdAt).toLocaleString()}</p>
+            <>
+              <div className="pagination-info">
+                Showing {indexOfFirstCreature + 1}-{Math.min(indexOfLastCreature, creatures.length)} of {creatures.length} creatures
+              </div>
+
+              <div className="creatures-list">
+                {currentCreatures.map((creature) => (
+                  <div key={creature.id} className="creature-card">
+                    <h3>{creature.name}</h3>
+                    <p><strong>Species:</strong> {creature.species}</p>
+                    <p><strong>ID:</strong> {creature.id}</p>
+                    <p><strong>Created:</strong> {new Date(creature.createdAt).toLocaleString()}</p>
+                  </div>
+                ))}
+              </div>
+
+              {totalPages > 1 && (
+                <div className="pagination">
+                  <button
+                    onClick={handlePrevPage}
+                    disabled={currentPage === 1}
+                    className="btn btn-secondary"
+                  >
+                    ← Previous
+                  </button>
+
+                  <div className="page-numbers">
+                    {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
+                      <button
+                        key={pageNum}
+                        onClick={() => handlePageClick(pageNum)}
+                        className={`btn btn-page ${currentPage === pageNum ? 'active' : ''}`}
+                      >
+                        {pageNum}
+                      </button>
+                    ))}
+                  </div>
+
+                  <button
+                    onClick={handleNextPage}
+                    disabled={currentPage === totalPages}
+                    className="btn btn-secondary"
+                  >
+                    Next →
+                  </button>
                 </div>
-              ))}
-            </div>
+              )}
+            </>
           )}
         </section>
 
