@@ -462,6 +462,19 @@ Ideas:
 
 ---
 
+## Roadmap (Future Ideas)
+
+- Full creature interaction engine
+- Turn-based evolution tick
+- UI dashboard (React/Ember)
+- Distributed tracing
+- Retry/backoff logic
+- Event replay
+- Creature breeding
+- Phenomena service
+
+---
+
 ## Timeline
 
 ```mermaid
@@ -507,19 +520,6 @@ You're the new backend engineer tasked with building a distributed system sturdy
 
 Good luck.
 The department believes in you, mostly because everyone else quit.
-
----
-
-## Roadmap (Future Ideas)
-
-- Full creature interaction engine
-- Turn-based evolution tick
-- UI dashboard (React/Ember)
-- Distributed tracing
-- Retry/backoff logic
-- Event replay
-- Creature breeding
-- Phenomena service
 
 ---
 
