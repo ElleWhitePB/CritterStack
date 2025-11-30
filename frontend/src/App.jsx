@@ -25,8 +25,13 @@ function App() {
     setSelectedSpecies(null);
   };
 
+  const getSpeciesDetails = (speciesName) => {
+    return SPECIES.find(s => s.name === speciesName);
+  };
+
   const handleGetAllCreatures = async () => {
     resetForm();
+    setCreatureId("");
     setLoading(true);
     setSelectedCreature(null);
     setCurrentPage(1); // Reset to first page when loading new data
@@ -129,179 +134,234 @@ function App() {
   };
 
   return (
-    <div className="app">
-      {toast && (
-        <Toast
-          message={toast.message}
-          type={toast.type}
-          onClose={() => setToast(null)}
-        />
-      )}
+		<div className="app">
+			{toast && (
+				<Toast
+					message={toast.message}
+					type={toast.type}
+					onClose={() => setToast(null)}
+				/>
+			)}
 
-      <header className="header">
-        <h1>🦎 Department of Peculiar Creatures 🌿</h1>
-        <p className="subtitle">✨ Magical Creature Management System ✨</p>
-      </header>
+			<header className="header">
+				<h1>🦎 Department of Peculiar Creatures 🌿</h1>
+				<p className="subtitle">✨ Magical Creature Management System ✨</p>
+			</header>
 
-      <main className="main">
-        {/* Get All Creatures Section */}
-        <section className="card">
-          <h2>Get All Creatures</h2>
-          <button
-            onClick={handleGetAllCreatures}
-            disabled={loading}
-            className="btn btn-primary"
-          >
-            {loading ? "Loading..." : "Get All Creatures"}
-          </button>
+			<main className="main">
+				{/* Get All Creatures Section */}
+				<section className="card">
+					<h2>Get All Creatures</h2>
+					<button
+						onClick={handleGetAllCreatures}
+						disabled={loading}
+						className="btn btn-primary"
+					>
+						{loading ? "Loading..." : "Get All Creatures"}
+					</button>
 
-          {creatures.length > 0 && (
-            <>
-              <div className="pagination-info">
-                Showing {indexOfFirstCreature + 1}-{Math.min(indexOfLastCreature, creatures.length)} of {creatures.length} creatures
-              </div>
+					{creatures.length > 0 && (
+						<>
+							<div className="pagination-info">
+								Showing {indexOfFirstCreature + 1}-
+								{Math.min(indexOfLastCreature, creatures.length)} of{" "}
+								{creatures.length} creatures
+							</div>
 
-              <div className="creatures-list">
-                {currentCreatures.map((creature) => (
-                  <div key={creature.id} className="creature-card">
-                    <h3>{creature.name}</h3>
-                    <p><strong>Species:</strong> {creature.species}</p>
-                    <p><strong>ID:</strong> {creature.id}</p>
-                    <p><strong>Created:</strong> {new Date(creature.createdAt).toLocaleString()}</p>
-                  </div>
-                ))}
-              </div>
+							<div className="creatures-list">
+								{currentCreatures.map((creature) => (
+									<div key={creature.id} className="creature-card">
+										<h3>{creature.name}</h3>
+										<p>
+											<strong>ID:</strong> {creature.id}
+										</p>
+										<p>
+											<strong>Species:</strong> {creature.species}
+										</p>
+										<p>
+											<strong>Created:</strong>{" "}
+											{new Date(creature.createdAt).toLocaleString()}
+										</p>
+									</div>
+								))}
+							</div>
 
-              {totalPages > 1 && (
-                <div className="pagination">
-                  <button
-                    onClick={handlePrevPage}
-                    disabled={currentPage === 1}
-                    className="btn btn-secondary"
-                  >
-                    ← Previous
-                  </button>
+							{totalPages > 1 && (
+								<div className="pagination">
+									<button
+										onClick={handlePrevPage}
+										disabled={currentPage === 1}
+										className="btn btn-secondary"
+									>
+										← Previous
+									</button>
 
-                  <div className="page-numbers">
-                    {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
-                      <button
-                        key={pageNum}
-                        onClick={() => handlePageClick(pageNum)}
-                        className={`btn btn-page ${currentPage === pageNum ? 'active' : ''}`}
-                      >
-                        {pageNum}
-                      </button>
-                    ))}
-                  </div>
+									<div className="page-numbers">
+										{Array.from({ length: totalPages }, (_, i) => i + 1).map(
+											(pageNum) => (
+												<button
+													key={pageNum}
+													onClick={() => handlePageClick(pageNum)}
+													className={`btn btn-page ${currentPage === pageNum ? "active" : ""}`}
+												>
+													{pageNum}
+												</button>
+											)
+										)}
+									</div>
 
-                  <button
-                    onClick={handleNextPage}
-                    disabled={currentPage === totalPages}
-                    className="btn btn-secondary"
-                  >
-                    Next →
-                  </button>
-                </div>
-              )}
-            </>
-          )}
-        </section>
+									<button
+										onClick={handleNextPage}
+										disabled={currentPage === totalPages}
+										className="btn btn-secondary"
+									>
+										Next →
+									</button>
+								</div>
+							)}
+						</>
+					)}
+				</section>
 
-        {/* Get by ID Section */}
-        <section className="card">
-          <h2>Get Creature by ID</h2>
-          <div className="form-row">
-            <input
-              type="number"
-              value={creatureId}
-              onChange={(e) => setCreatureId(e.target.value)}
-              onKeyDown={handleIdKeyDown}
-              placeholder="Enter creature ID"
-              className="input"
-            />
-            <button
-              onClick={handleGetById}
-              disabled={loading}
-              className="btn btn-secondary"
-            >
-              {loading ? "Loading..." : "Get by ID"}
-            </button>
-          </div>
+				{/* Get by ID Section */}
+				<section className="card">
+					<h2>Get Creature by ID</h2>
+					<div className="form-row">
+						<input
+							type="number"
+							value={creatureId}
+							onChange={(e) => setCreatureId(e.target.value)}
+							onKeyDown={handleIdKeyDown}
+							placeholder="Enter creature ID"
+							className="input"
+						/>
+						<button
+							onClick={handleGetById}
+							disabled={loading}
+							className="btn btn-secondary"
+						>
+							{loading ? "Loading..." : "Get by ID"}
+						</button>
+					</div>
 
-          {selectedCreature && (
-            <div className="creature-detail">
-              <h3>{selectedCreature.name}</h3>
-              <p><strong>Species:</strong> {selectedCreature.species}</p>
-              <p><strong>ID:</strong> {selectedCreature.id}</p>
-              <p><strong>Created:</strong> {new Date(selectedCreature.createdAt).toLocaleString()}</p>
-            </div>
-          )}
-        </section>
+					{selectedCreature && (
+						<div className="creature-detail">
+							<h3>{selectedCreature.name}</h3>
+							<p>
+								<strong>ID:</strong> {selectedCreature.id}
+							</p>
+							<p>
+								<strong>Created:</strong>{" "}
+								{new Date(selectedCreature.createdAt).toLocaleString()}
+							</p>
+							<p>
+								<strong>Species:</strong> {selectedCreature.species}
+							</p>
 
-        {/* Create Creature Section */}
-        <section className="card">
-          <h2>Create Creature</h2>
-          <form onSubmit={handleCreateCreature} className="create-form">
-            <div className="form-group">
-              <label htmlFor="name">Name</label>
-              <div className="name-input-group">
-                <input
-                  id="name"
-                  type="text"
-                  value={newCreature.name}
-                  onChange={(e) => setNewCreature({ ...newCreature, name: e.target.value })}
-                  onKeyDown={handleIdKeyDown}
-                  placeholder="Enter creature name"
-                  className="input"
-                />
-                <button
-                  type="button"
-                  onClick={handleGeneratePeculiarName}
-                  className="btn btn-help"
-                >
-                  🎲 a little help here
-                </button>
-              </div>
-            </div>
+							{getSpeciesDetails(selectedCreature.species) && (
+								<>
+									<div className="species-details">
+										<p>
+											<strong>Classification:</strong>{" "}
+											{
+												getSpeciesDetails(selectedCreature.species)
+													.classification
+											}
+										</p>
+										<p>
+											<strong>Temperament:</strong>{" "}
+											{getSpeciesDetails(selectedCreature.species).temperament}
+										</p>
+										<p>
+											<strong>Found In:</strong>{" "}
+											{getSpeciesDetails(selectedCreature.species).foundIn}
+										</p>
+										<p>
+											<strong>Handling Tip:</strong>{" "}
+											{getSpeciesDetails(selectedCreature.species).handlingTip}
+										</p>
+									</div>
+									<div className="species-lore">
+										<div className="lore-header">
+											<span className="lore-icon">📜</span>
+											<strong>Species Lore</strong>
+										</div>
+										<p>{getSpeciesDetails(selectedCreature.species).lore}</p>
+									</div>
+								</>
+							)}
+						</div>
+					)}
+				</section>
 
-            <div className="form-group">
-              <label htmlFor="species">Species</label>
-              <select
-                id="species"
-                value={newCreature.species}
-                onChange={handleSpeciesChange}
-                className="select"
-              >
-                <option value="" disabled>Choose a species</option>
-                {SPECIES.map((species) => (
-                  <option key={species.name} value={species.name}>
-                    {species.name}
-                  </option>
-                ))}
-              </select>
-              {selectedSpecies && (
-                <div className="species-lore">
-                  <div className="lore-header">
-                    <span className="lore-icon">📜</span>
-                    <strong>Species Lore</strong>
-                  </div>
-                  <p>{selectedSpecies.lore}</p>
-                </div>
-              )}
-            </div>
+				{/* Create Creature Section */}
+				<section className="card">
+					<h2>Create Creature</h2>
+					<form onSubmit={handleCreateCreature} className="create-form">
+						<div className="form-group">
+							<label htmlFor="name">Name</label>
+							<div className="name-input-group">
+								<input
+									id="name"
+									type="text"
+									value={newCreature.name}
+									onChange={(e) =>
+										setNewCreature({ ...newCreature, name: e.target.value })
+									}
+									onKeyDown={handleIdKeyDown}
+									placeholder="Enter creature name"
+									className="input"
+								/>
+								<button
+									type="button"
+									onClick={handleGeneratePeculiarName}
+									className="btn btn-help"
+								>
+									🎲 a little help here
+								</button>
+							</div>
+						</div>
 
-            <button
-              type="submit"
-              disabled={loading}
-              className="btn btn-primary"
-            >
-              {loading ? "Creating..." : "Create Creature"}
-            </button>
-          </form>
-        </section>
-      </main>
-    </div>
-  );
+						<div className="form-group">
+							<label htmlFor="species">Species</label>
+							<select
+								id="species"
+								value={newCreature.species}
+								onChange={handleSpeciesChange}
+								className="select"
+							>
+								<option value="" disabled>
+									Choose a species
+								</option>
+								{SPECIES.map((species) => (
+									<option key={species.name} value={species.name}>
+										{species.name}
+									</option>
+								))}
+							</select>
+							{selectedSpecies && (
+								<div className="species-lore">
+									<div className="lore-header">
+										<span className="lore-icon">📜</span>
+										<strong>Species Lore</strong>
+									</div>
+									<p>{selectedSpecies.lore}</p>
+								</div>
+							)}
+						</div>
+
+						<button
+							type="submit"
+							disabled={loading}
+							className="btn btn-primary"
+						>
+							{loading ? "Creating..." : "Create Creature"}
+						</button>
+					</form>
+				</section>
+			</main>
+		</div>
+	);
 }
 
 export default App;
