@@ -384,15 +384,6 @@ npx prisma generate
 - [ ] Update and delete species endpoints (PATCH /creatures/species/:name, DELETE /creatures/species/:name)
 - [ ] Request logging middleware
 
-## Contributing
-
-1. Create a feature branch
-2. Make your changes
-3. Write/update tests
-4. Ensure tests pass: `npm test`
-5. Update documentation
-6. Submit a pull request
-
 ## License
 
 Part of the CritterStack project.

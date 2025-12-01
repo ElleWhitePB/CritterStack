@@ -379,6 +379,12 @@ While not in the original plan, the frontend provides:
 - User-friendly way to test endpoints
 - Foundation for future UI development
 
+**Two-Table Schema (Creature + Species):**
+Chose to model Species and Creature as separate tables to:
+- Explore foreign key relationships in Postgres/Prisma in a realistic but approachable way
+- Normalize shared species data (name, lore) across many creatures
+- Create more opportunities for rich lore/flair around species without duplicating text on every creature record
+
 
 #### Lessons Learned
 - Resolved Docker ↔ Postgres connectivity failures by correcting container networking, environment variables, and port configuration, resulting in a stable local development environment.
@@ -386,6 +392,9 @@ While not in the original plan, the frontend provides:
 - Corrected routing flow issues so requests consistently reached the intended controller and service layers.
 - Implemented proper request validation to prevent malformed payloads from causing database errors or inconsistent writes.
 - Refactored early controller logic to separate database operations into the service layer, improving clarity and maintainability.
+- Fixed Prisma 7 seeding issues by correcting config setup, file placement, and seed script execution.
+ - Clarified how browser-enforced CORS works and configured the creature service to explicitly allow the React frontend origin during local development.
+
 
 ---
 
