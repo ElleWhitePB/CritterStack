@@ -31,5 +31,27 @@ export const api = {
     }
     return response.json();
   },
-};
 
+  async getAllSpecies() {
+    const response = await fetch(`${API_BASE_URL}/creatures/species`);
+    if (!response.ok) {
+      throw new Error("Failed to fetch species");
+    }
+    return response.json();
+  },
+
+  async createSpecies(data) {
+    const response = await fetch(`${API_BASE_URL}/creatures/species`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error || "Failed to create species");
+    }
+    return response.json();
+  },
+};

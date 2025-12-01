@@ -1,7 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { api } from "./services/api";
-import { SPECIES } from "./constants/species";
-import { generatePeculiarName } from "./utils/nameGenerator";
+import { generateCreatureName, generateSpeciesName } from "./utils/nameGenerator";
 import Toast from "./components/Toast";
 import "./App.css";
 
@@ -9,24 +8,34 @@ function App() {
   const [creatures, setCreatures] = useState([]);
   const [selectedCreature, setSelectedCreature] = useState(null);
   const [creatureId, setCreatureId] = useState("");
-  const [newCreature, setNewCreature] = useState({ name: "", species: "" });
+  const [newCreature, setNewCreature] = useState({ name: "", speciesName: "", lore: "" });
   const [loading, setLoading] = useState(false);
   const [toast, setToast] = useState(null);
-  const [selectedSpecies, setSelectedSpecies] = useState(null);
+  const [species, setSpecies] = useState([]);
+  const [isNewSpecies, setIsNewSpecies] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const creaturesPerPage = 6;
+
+  // Fetch species on component mount
+  useEffect(() => {
+    const fetchSpecies = async () => {
+      try {
+        const data = await api.getAllSpecies();
+        setSpecies(data);
+      } catch (error) {
+        showToast("Failed to load species", "error");
+      }
+    };
+    fetchSpecies();
+  }, []);
 
   const showToast = (message, type = "success") => {
     setToast({ message, type });
   };
 
   const resetForm = () => {
-    setNewCreature({ name: "", species: "" });
-    setSelectedSpecies(null);
-  };
-
-  const getSpeciesDetails = (speciesName) => {
-    return SPECIES.find(s => s.name === speciesName);
+    setNewCreature({ name: "", speciesName: "", lore: "" });
+    setIsNewSpecies(false);
   };
 
   const handleGetAllCreatures = async () => {
@@ -100,17 +109,34 @@ function App() {
       showToast("Please enter a creature name", "error");
       return;
     }
-    if (!newCreature.species) {
+    if (!newCreature.speciesName) {
       showToast("Please select a species", "error");
       return;
     }
+
+    // If creating a new species, do that first
+    if (isNewSpecies) {
+      if (!newCreature.speciesName) {
+        showToast("Please enter a species name", "error");
+        return;
+      }
+      try {
+        await api.createSpecies({ name: newCreature.speciesName, lore: newCreature.lore });
+      } catch (error) {
+        showToast(error.message, "error");
+        return;
+      }
+    }
+
     setLoading(true);
     try {
-      const created = await api.createCreature(newCreature);
+      const creatureData = { name: newCreature.name, speciesName: newCreature.speciesName };
+      const created = await api.createCreature(creatureData);
       showToast(`${created.name} created successfully!`);
-      setNewCreature({ name: "", species: SPECIES[0].name });
-      setSelectedSpecies(SPECIES[0]);
-      // Optionally refresh the list
+      resetForm();
+      // Refresh the species list and creature list
+      const updatedSpecies = await api.getAllSpecies();
+      setSpecies(updatedSpecies);
       if (creatures.length > 0) {
         handleGetAllCreatures();
       }
@@ -121,16 +147,25 @@ function App() {
     }
   };
 
-  const handleGeneratePeculiarName = () => {
-    const name = generatePeculiarName();
+  const handlegenerateCreatureName = () => {
+    const name = generateCreatureName();
     setNewCreature({ ...newCreature, name });
+  };
+
+  const handleGenerateSpeciesName = () => {
+    const speciesName = generateSpeciesName();
+    setNewCreature({ ...newCreature, speciesName });
   };
 
   const handleSpeciesChange = (e) => {
     const speciesName = e.target.value;
-    const species = SPECIES.find(s => s.name === speciesName);
-    setNewCreature({ ...newCreature, species: speciesName });
-    setSelectedSpecies(species);
+    if (speciesName === "new") {
+      setIsNewSpecies(true);
+      setNewCreature({ ...newCreature, speciesName: "", lore: "" });
+    } else {
+      setIsNewSpecies(false);
+      setNewCreature({ ...newCreature, speciesName, lore: "" });
+    }
   };
 
   return (
@@ -149,6 +184,123 @@ function App() {
 			</header>
 
 			<main className="main">
+				{/* Create Creature Section */}
+				<section className="card">
+					<h2>Create Creature</h2>
+					<form onSubmit={handleCreateCreature} className="create-form">
+						<div className="form-group">
+							<label htmlFor="name">Name</label>
+							<div className="name-input-group">
+								<input
+									id="name"
+									type="text"
+									value={newCreature.name}
+									onChange={(e) =>
+										setNewCreature({ ...newCreature, name: e.target.value })
+									}
+									onKeyDown={handleIdKeyDown}
+									placeholder="Enter creature name"
+									className="input"
+								/>
+								<button
+									type="button"
+									onClick={handlegenerateCreatureName}
+									className="btn btn-help"
+								>
+									🎲 a little help here
+								</button>
+							</div>
+						</div>
+
+						<div className="form-group">
+							<label htmlFor="species">Species</label>
+							<select
+								id="species"
+								value={isNewSpecies ? "new" : newCreature.speciesName}
+								onChange={handleSpeciesChange}
+								className="select"
+							>
+								<option value="" disabled>
+									Choose a species
+								</option>
+								{species.map((s) => (
+									<option key={s.name} value={s.name}>
+										{s.name}
+									</option>
+								))}
+								<option value="new">+ Report New Species</option>
+							</select>
+
+							{isNewSpecies && (
+								<>
+									<div className="form-group new-species-field">
+										<label htmlFor="species-name">Species Name</label>
+										<div className="name-input-group">
+											<input
+												id="species-name"
+												type="text"
+												placeholder="Enter species name"
+												value={newCreature.speciesName}
+												onChange={(e) =>
+													setNewCreature({
+														...newCreature,
+														speciesName: e.target.value,
+													})
+												}
+												className="input"
+											/>
+											<button
+												type="button"
+												onClick={handleGenerateSpeciesName}
+												className="btn btn-help"
+											>
+												🎲 a little help here
+											</button>
+										</div>
+									</div>
+									<div className="form-group new-species-field">
+										<label htmlFor="species-lore">Species Lore (optional)</label>
+										<textarea
+											id="species-lore"
+											placeholder="Enter species lore"
+											value={newCreature.lore}
+											onChange={(e) =>
+												setNewCreature({
+													...newCreature,
+													lore: e.target.value,
+												})
+											}
+											className="textarea"
+											rows="4"
+										/>
+									</div>
+								</>
+							)}
+
+							{!isNewSpecies && newCreature.speciesName && (
+								<div className="species-lore">
+									<div className="lore-header">
+										<span className="lore-icon">📜</span>
+										<strong>Species Lore</strong>
+									</div>
+									<p>
+										{species.find((s) => s.name === newCreature.speciesName)?.lore ||
+											"Lore unavailable. Every expert sent to study this creature has returned with more questions than equipment."}
+									</p>
+								</div>
+							)}
+						</div>
+
+						<button
+							type="submit"
+							disabled={loading}
+							className="btn btn-primary"
+						>
+							{loading ? "Creating..." : "Create Creature"}
+						</button>
+					</form>
+				</section>
+
 				{/* Get All Creatures Section */}
 				<section className="card">
 					<h2>Get All Creatures</h2>
@@ -170,13 +322,21 @@ function App() {
 
 							<div className="creatures-list">
 								{currentCreatures.map((creature) => (
-									<div key={creature.id} className="creature-card">
+									<div
+										key={creature.id}
+										className="creature-card"
+										onClick={() => {
+											setSelectedCreature(creature);
+											setCreatureId(creature.id);
+										}}
+										style={{ cursor: "pointer" }}
+									>
 										<h3>{creature.name}</h3>
 										<p>
 											<strong>ID:</strong> {creature.id}
 										</p>
 										<p>
-											<strong>Species:</strong> {creature.species}
+											<strong>Species:</strong> {creature.speciesName}
 										</p>
 										<p>
 											<strong>Created:</strong>{" "}
@@ -255,109 +415,21 @@ function App() {
 								{new Date(selectedCreature.createdAt).toLocaleString()}
 							</p>
 							<p>
-								<strong>Species:</strong> {selectedCreature.species}
+								<strong>Species:</strong> {selectedCreature.speciesName}
 							</p>
 
-							{getSpeciesDetails(selectedCreature.species) && (
-								<>
-									<div className="species-details">
-										<p>
-											<strong>Classification:</strong>{" "}
-											{
-												getSpeciesDetails(selectedCreature.species)
-													.classification
-											}
-										</p>
-										<p>
-											<strong>Temperament:</strong>{" "}
-											{getSpeciesDetails(selectedCreature.species).temperament}
-										</p>
-										<p>
-											<strong>Found In:</strong>{" "}
-											{getSpeciesDetails(selectedCreature.species).foundIn}
-										</p>
-										<p>
-											<strong>Handling Tip:</strong>{" "}
-											{getSpeciesDetails(selectedCreature.species).handlingTip}
-										</p>
-									</div>
-									<div className="species-lore">
-										<div className="lore-header">
-											<span className="lore-icon">📜</span>
-											<strong>Species Lore</strong>
-										</div>
-										<p>{getSpeciesDetails(selectedCreature.species).lore}</p>
-									</div>
-								</>
-							)}
-						</div>
-					)}
-				</section>
-
-				{/* Create Creature Section */}
-				<section className="card">
-					<h2>Create Creature</h2>
-					<form onSubmit={handleCreateCreature} className="create-form">
-						<div className="form-group">
-							<label htmlFor="name">Name</label>
-							<div className="name-input-group">
-								<input
-									id="name"
-									type="text"
-									value={newCreature.name}
-									onChange={(e) =>
-										setNewCreature({ ...newCreature, name: e.target.value })
-									}
-									onKeyDown={handleIdKeyDown}
-									placeholder="Enter creature name"
-									className="input"
-								/>
-								<button
-									type="button"
-									onClick={handleGeneratePeculiarName}
-									className="btn btn-help"
-								>
-									🎲 a little help here
-								</button>
+							<div className="species-lore">
+								<div className="lore-header">
+									<span className="lore-icon">📜</span>
+									<strong>Species Lore</strong>
+								</div>
+								<p>
+									{selectedCreature.species?.lore ||
+										"Lore unavailable. Every expert sent to study this creature has returned with more questions than equipment."}
+								</p>
 							</div>
 						</div>
-
-						<div className="form-group">
-							<label htmlFor="species">Species</label>
-							<select
-								id="species"
-								value={newCreature.species}
-								onChange={handleSpeciesChange}
-								className="select"
-							>
-								<option value="" disabled>
-									Choose a species
-								</option>
-								{SPECIES.map((species) => (
-									<option key={species.name} value={species.name}>
-										{species.name}
-									</option>
-								))}
-							</select>
-							{selectedSpecies && (
-								<div className="species-lore">
-									<div className="lore-header">
-										<span className="lore-icon">📜</span>
-										<strong>Species Lore</strong>
-									</div>
-									<p>{selectedSpecies.lore}</p>
-								</div>
-							)}
-						</div>
-
-						<button
-							type="submit"
-							disabled={loading}
-							className="btn btn-primary"
-						>
-							{loading ? "Creating..." : "Create Creature"}
-						</button>
-					</form>
+					)}
 				</section>
 			</main>
 		</div>

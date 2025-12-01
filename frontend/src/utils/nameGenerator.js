@@ -17,7 +17,7 @@ function maybeApostrophe(str) {
   return str.slice(0, pos) + "'" + str.slice(pos);
 }
 
-export function generatePeculiarName() {
+export function generateCreatureName() {
   const s = pick(softStarts);
   const m = pick(middles);
   const e = pick(ends);
@@ -27,4 +27,41 @@ export function generatePeculiarName() {
 
 function pick(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
+}
+
+export function generateSpeciesName() {
+  const descriptors = [
+    // Soft natural descriptors (Group 1 + 2)
+    "Moss", "Glow", "Starlit", "Bramble", "Ash", "Pebble", "Mire", "Drift",
+    "Spore", "Cinder", "Mist", "Dusk", "Thimble", "Bark", "Hollow",
+    "Echo", "Shimmer", "Rustle", "Wick", "Tangle", "Soot", "Bloom",
+    "Mossy", "Nettle", "Shiver", "Gloom", "Lunar"
+  ];
+
+  const creatureForms = [
+    // Small critter forms (Group 1 + 2)
+    "Nib", "Pip", "Grub", "Moth", "Sprite", "Wisp", "Back",
+    "Fin", "Tuft", "Sprout", "Flicker", "Gnat", "Wing", "Mare", "ling"
+  ];
+
+  const dramaticForms = [
+    // Larger species (Group 3)
+    "Stag", "Hound", "Ram", "Treader", "Stagwing", "Mare", "Ox", "Crawler"
+  ];
+
+  // 80% small creature names, 20% dramatic creature names
+  const useDramatic = Math.random() < 0.2;
+
+  const descriptor = pick(descriptors);
+  const form = useDramatic
+    ? pick(dramaticForms)
+    : pick(creatureForms);
+
+  // 70% chance to hyphenate (Moon-Pip, Star-Moth, Thornbellow style)
+  const hyphenate = Math.random() < 0.7;
+
+  // Assemble
+  const name = hyphenate ? `${descriptor}-${form}` : `${descriptor}${form}`;
+
+  return name;
 }

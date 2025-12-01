@@ -7,7 +7,8 @@
     "dev": "node src/index.js",
     "test": "NODE_OPTIONS=--experimental-vm-modules jest",
     "test:watch": "NODE_OPTIONS=--experimental-vm-modules jest --watch",
-    "test:coverage": "NODE_OPTIONS=--experimental-vm-modules jest --coverage"
+    "test:coverage": "NODE_OPTIONS=--experimental-vm-modules jest --coverage",
+    "seed": "node prisma/seed.js"
   },
   "description": "Manages creature identities, traits, and lifecycle data.",
   "directories": {
