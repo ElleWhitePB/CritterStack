@@ -61,44 +61,60 @@ flowchart LR
 A whimsical web interface for managing creatures.
 
 **Features:**
-- ✅ View all creatures in a magical card layout
-- ✅ Search creature by ID
-- ✅ Create new creatures with form
+- ✅ View all creatures in paginated card layout (6 per page)
+- ✅ Search creature by ID with detail view
+- ✅ Create new creatures with form validation
 - ✅ Species dropdown with lore display
-- ✅ Random name generator
-- ✅ Toast notifications
+- ✅ Report new species to database
+- ✅ Random creature name generator
+- ✅ Random species name generator
+- ✅ Toast notifications for feedback
 - ✅ Responsive design with nature theme
+- ✅ Clickable creature cards for detail view
 
 **Tech:**
-- React + Vite
+- React 18 + Vite
 - Modern CSS with gradients and animations
 - Fetch API for backend communication
+- React Hooks for state management
 
 **Access:** `http://localhost:5173` (when running)
 
+[📖 Full Documentation](./frontend/README.md)
+
 ### **Creature Service** ✅ **LIVE**
-The first service is fully operational!
+The first service is fully operational with species management!
 
 **Implemented:**
 - ✅ Creature CRUD operations (Create, Read)
+- ✅ Species management (Create, Read)
+- ✅ Two-table relational schema (Creature ↔ Species)
 - ✅ RESTful API with Express
 - ✅ PostgreSQL database with Prisma ORM
 - ✅ Zod validation
 - ✅ Health check endpoint
 - ✅ CORS enabled
+- ✅ Database seeding with 11 species
 - ✅ 100% test coverage on service layer
 
 **Tech:**
 - Node.js + Express 5
-- Prisma + PostgreSQL
+- Prisma + PostgreSQL with pg adapter
 - Zod validation
 - Jest testing
 
 **Endpoints:**
 - `GET /health` - Service health
-- `GET /creatures` - List all creatures
-- `GET /creatures/:id` - Get creature by ID
+- `GET /creatures` - List all creatures with species
+- `GET /creatures/:id` - Get creature by ID with species
 - `POST /creatures` - Create new creature
+- `GET /creatures/species` - List all species
+- `POST /creatures/species` - Create new species
+
+**Database Schema:**
+- Species table (name, lore)
+- Creature table (id, name, speciesName, createdAt)
+- Foreign key relationship: Creature.speciesName → Species.name
 
 [📖 Full Documentation](./creature-service/README.md)
 
@@ -315,6 +331,10 @@ The initial milestone was designed to establish the foundation:
 
 **Additional Features (Beyond Original Scope):**
 - ✅ `GET /creatures` - List all creatures (not in original plan)
+- ✅ Two-table relational schema (Species + Creature tables)
+- ✅ `GET /creatures/species` - List all species
+- ✅ `POST /creatures/species` - Create new species
+- ✅ Database seeding with 11 unique species
 - ✅ CORS enabled for frontend integration
 - ✅ Comprehensive unit tests with Jest (100% service layer coverage)
 - ✅ Test coverage reporting and thresholds
@@ -323,21 +343,26 @@ The initial milestone was designed to establish the foundation:
 **Bonus: React Frontend (Not in Original Plan)**
 A complete web interface was added to demonstrate the API:
 - ✅ Modern UI with whimsical magical nature theme
-- ✅ Get all creatures with card display
-- ✅ Get creature by ID with search
+- ✅ Get all creatures with paginated card display (6 per page)
+- ✅ Get creature by ID with search and detail view
 - ✅ Create creature form with species dropdown
 - ✅ Species lore information display
-- ✅ Random name generator with "a little help here" button
+- ✅ Report new species to database
+- ✅ Random creature name generator with "a little help here" button
+- ✅ Random species name generator with "a little help here" button
 - ✅ Toast notifications for success/error feedback
 - ✅ Responsive design with animations
-- ✅ 10 unique species with custom lore
+- ✅ Clickable creature cards for detail view
+- ✅ 11 unique species with custom lore
+- ✅ Form validation and reset functionality
 
 **Final Tech Stack:**
 - Backend: Node.js, Express 5, Prisma, PostgreSQL, Zod
-- Frontend: React, Vite
+- Frontend: React 18, Vite
 - Testing: Jest with 100% service layer coverage
-- Database: PostgreSQL in Docker
+- Database: PostgreSQL in Docker with two-table schema
 - Styling: Custom CSS with gradients and animations
+- Seeding: Prisma seed script with 11 species
 
 #### Key Decisions & Deviations
 

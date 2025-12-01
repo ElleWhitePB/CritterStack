@@ -7,8 +7,15 @@ datasource db {
 }
 
 model Creature {
-  id        Int   @id @default(autoincrement())
-  name      String
-  species   String
-  createdAt DateTime @default(now())
+  id           Int      @id @default(autoincrement())
+  name         String
+  speciesName  String
+  species      Species  @relation(fields: [speciesName], references: [name])
+  createdAt    DateTime @default(now())
+}
+
+model Species {
+  name       String     @id
+  lore       String?
+  creatures  Creature[]
 }

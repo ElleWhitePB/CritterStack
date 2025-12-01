@@ -35,7 +35,7 @@ Returns service health status.
 ```
 GET /creatures
 ```
-Retrieves all creatures from the database.
+Retrieves all creatures from the database with their associated species information.
 
 **Response:**
 ```json
@@ -43,8 +43,12 @@ Retrieves all creatures from the database.
   {
     "id": 1,
     "name": "Fluffy",
-    "species": "Gleeble",
-    "createdAt": "2025-11-30T12:00:00.000Z"
+    "speciesName": "Gleeble",
+    "createdAt": "2025-11-30T12:00:00.000Z",
+    "species": {
+      "name": "Gleeble",
+      "lore": "Tiny gelatinous chaos-beings that emit musical chirps when startled."
+    }
   }
 ]
 ```
@@ -53,7 +57,7 @@ Retrieves all creatures from the database.
 ```
 GET /creatures/:id
 ```
-Retrieves a specific creature by ID.
+Retrieves a specific creature by ID with full species details.
 
 **Parameters:**
 - `id` (number) - Creature ID
@@ -63,8 +67,12 @@ Retrieves a specific creature by ID.
 {
   "id": 1,
   "name": "Fluffy",
-  "species": "Gleeble",
-  "createdAt": "2025-11-30T12:00:00.000Z"
+  "speciesName": "Gleeble",
+  "createdAt": "2025-11-30T12:00:00.000Z",
+  "species": {
+    "name": "Gleeble",
+    "lore": "Tiny gelatinous chaos-beings that emit musical chirps when startled."
+  }
 }
 ```
 
@@ -76,27 +84,31 @@ Retrieves a specific creature by ID.
 ```
 POST /creatures
 ```
-Creates a new creature.
+Creates a new creature linked to an existing species.
 
 **Request Body:**
 ```json
 {
   "name": "Sparkles",
-  "species": "Gleeble"
+  "speciesName": "Gleeble"
 }
 ```
 
 **Validation:**
 - `name` (string, required) - Creature name
-- `species` (string, required) - Species type
+- `speciesName` (string, required) - Species name (must exist in Species table)
 
 **Response:** `201 Created`
 ```json
 {
   "id": 2,
   "name": "Sparkles",
-  "species": "Gleeble",
-  "createdAt": "2025-11-30T12:05:00.000Z"
+  "speciesName": "Gleeble",
+  "createdAt": "2025-11-30T12:05:00.000Z",
+  "species": {
+    "name": "Gleeble",
+    "lore": "Tiny gelatinous chaos-beings that emit musical chirps when startled."
+  }
 }
 ```
 
@@ -107,30 +119,99 @@ Creates a new creature.
 }
 ```
 
+### Get All Species
+```
+GET /creatures/species
+```
+Retrieves all available species from the database.
+
+**Response:**
+```json
+[
+  {
+    "name": "Gleeble",
+    "lore": "Tiny gelatinous chaos-beings that emit musical chirps when startled."
+  },
+  {
+    "name": "Moon-Pip",
+    "lore": "Shy, bioluminescent nocturnal creatures whose freckles pulse in soft patterns."
+  }
+]
+```
+
+### Create Species
+```
+POST /creatures/species
+```
+Creates a new species that can be assigned to creatures.
+
+**Request Body:**
+```json
+{
+  "name": "Sparklebeast",
+  "lore": "A rare creature that shimmers with inner light."
+}
+```
+
+**Validation:**
+- `name` (string, required) - Species name (must be unique)
+- `lore` (string, optional) - Species lore/description
+
+**Response:** `201 Created`
+```json
+{
+  "name": "Sparklebeast",
+  "lore": "A rare creature that shimmers with inner light."
+}
+```
+
+**Error Response:** `400 Bad Request`
+```json
+{
+  "error": "Species name is required"
+}
+```
+
 ## Available Species
 
 The following species are recognized by the Department:
 - Gleeble
-- Mossclaw Newt
-- Starback Shrew
-- Fluffernox
-- Grumblethorn
-- Shimmerwisp
-- Puddlejumper
-- Snortleaf
-- Twinklepaw
-- Bumblebark
+- Moon-Pip
+- Thornbellow
+- Sootling
+- Eye-Sprite
+- Hearthmare
+- Wandergrub
+- Lanternback
+- Marrowfin
+- FrostNib
+- Star-Moth
 
 ## Database Schema
 
+The service uses a two-table relational model:
+
 ```prisma
+model Species {
+  name      String    @id
+  lore      String?
+  creatures Creature[]
+}
+
 model Creature {
-  id        Int      @id @default(autoincrement())
-  name      String
-  species   String
-  createdAt DateTime @default(now())
+  id          Int      @id @default(autoincrement())
+  name        String
+  speciesName String
+  species     Species  @relation(fields: [speciesName], references: [name])
+  createdAt   DateTime @default(now())
 }
 ```
+
+**Key Design Decisions:**
+- Species names are unique and serve as primary keys
+- Creatures have a foreign key relationship to Species
+- Lore is optional for species
+- Creatures are automatically timestamped on creation
 
 ## Setup & Installation
 
@@ -158,6 +239,9 @@ npx prisma migrate dev
 
 # Generate Prisma client
 npx prisma generate
+
+# Seed the database with initial species
+npm run seed
 ```
 
 ### Running the Service
@@ -294,9 +378,10 @@ npx prisma generate
 - [ ] Lifecycle events (growth, evolution)
 - [ ] Biome compatibility checks
 - [ ] Creature relationships
-- [ ] Pagination for GET /creatures
+- [x] Pagination for GET /creatures (implemented in frontend)
 - [ ] Filtering and search capabilities
-- [ ] Update and delete endpoints
+- [ ] Update and delete endpoints (PATCH /creatures/:id, DELETE /creatures/:id)
+- [ ] Update and delete species endpoints (PATCH /creatures/species/:name, DELETE /creatures/species/:name)
 - [ ] Request logging middleware
 
 ## Contributing

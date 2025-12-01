@@ -1,9 +1,15 @@
 // src/routes/creatures.js
 import express from "express";
 import { CreateCreatureSchema } from "../schemas/creature.js";
-import { getAllCreatures, createCreature, getCreatureById } from "../services/creatureService.js";
+import { getAllCreatures, createCreature, getCreatureById, getAllSpecies, createSpecies } from "../services/creatureService.js";
 
 const router = express.Router();
+
+// GET /creatures/species
+router.get("/species", async (req, res) => {
+    const species = await getAllSpecies();
+    res.json(species);
+});
 
 // GET /creatures
 router.get("/", async (req, res) => {
@@ -31,6 +37,22 @@ router.get("/:id", async (req, res) => {
     }
 
     res.json(creature);
+});
+
+// POST /species
+router.post("/species", async (req, res) => {
+    try {
+        const { name, lore } = req.body;
+
+        if (!name) {
+            return res.status(400).json({ error: "Species name is required" });
+        }
+
+        const species = await createSpecies({ name, lore: lore || null });
+        res.status(201).json(species);
+    } catch (err) {
+        res.status(400).json({ error: err.message });
+    }
 });
 
 // POST /creatures

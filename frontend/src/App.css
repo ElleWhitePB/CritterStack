@@ -325,6 +325,10 @@
   letter-spacing: 0.5px;
 }
 
+.form-group.new-species-field label {
+  font-size: 11px;
+}
+
 .name-input-group {
   display: flex;
   gap: 12px;

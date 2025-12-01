@@ -1,7 +1,7 @@
 // src/schemas/creature.js
 import { z } from "zod";
 
-export const CreateCreatureSchema = z.object({
+export const SpeciesSchema = z.object({
     name: z.string(),
-    speciesName: z.string(),
+    lore: z.string(),
 });

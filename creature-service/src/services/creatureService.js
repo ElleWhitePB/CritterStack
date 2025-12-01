@@ -2,12 +2,25 @@
 import { prisma } from "../db/client.js";
 
 export async function getAllCreatures() {
-    return prisma.creature.findMany();
+    return prisma.creature.findMany({
+        include: { species: true },
+    });
 }
 
 export async function getCreatureById(id) {
     return prisma.creature.findUnique({
         where: { id },
+        include: { species: true },
+    });
+}
+
+export function getAllSpecies() {
+    return prisma.species.findMany();
+}
+
+export async function createSpecies(data) {
+    return prisma.species.create({
+        data,
     });
 }
 
