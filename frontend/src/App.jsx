@@ -116,10 +116,6 @@ function App() {
 
     // If creating a new species, do that first
     if (isNewSpecies) {
-      if (!newCreature.speciesName) {
-        showToast("Please enter a species name", "error");
-        return;
-      }
       try {
         await api.createSpecies({ name: newCreature.speciesName, lore: newCreature.lore });
       } catch (error) {
@@ -147,7 +143,7 @@ function App() {
     }
   };
 
-  const handlegenerateCreatureName = () => {
+  const handleGenerateCreatureName = () => {
     const name = generateCreatureName();
     setNewCreature({ ...newCreature, name });
   };
@@ -204,7 +200,7 @@ function App() {
 								/>
 								<button
 									type="button"
-									onClick={handlegenerateCreatureName}
+									onClick={handleGenerateCreatureName}
 									className="btn btn-help"
 								>
 									🎲 a little help here
