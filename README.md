@@ -55,105 +55,106 @@ flowchart LR
 
 ---
 
-## Project at a Glance
+    ## Project at a Glance
 
-### **Frontend** ✅ **LIVE**
-A whimsical web interface for managing creatures.
+    ### **Frontend** ✅ **LIVE**
+    A whimsical web interface for managing creatures.
 
-**Features:**
-- ✅ View all creatures in paginated card layout (6 per page)
-- ✅ Search creature by ID with detail view
-- ✅ Create new creatures with form validation
-- ✅ Species dropdown with lore display
-- ✅ Report new species to database
-- ✅ Random creature name generator
-- ✅ Random species name generator
-- ✅ Toast notifications for feedback
-- ✅ Responsive design with nature theme
-- ✅ Clickable creature cards for detail view
+    **Features:**
+    - ✅ View all creatures in paginated card layout (6 per page)
+    - ✅ Search creature by ID with detail view
+    - ✅ Create new creatures with form validation
+    - ✅ Species dropdown with lore display
+    - ✅ Report new species to database
+    - ✅ Random creature name generator
+    - ✅ Random species name generator
+    - ✅ Toast notifications for feedback
+    - ✅ Responsive design with nature theme
+    - ✅ Clickable creature cards for detail view
 
-**Tech:**
-- React 18 + Vite
-- Modern CSS with gradients and animations
-- Fetch API for backend communication
-- React Hooks for state management
+    **Tech:**
+    - React 18 + Vite
+    - Modern CSS with gradients and animations
+    - Fetch API for backend communication
+    - React Hooks for state management
 
-**Access:** `http://localhost:5173` (when running)
+    **Access:** `http://localhost:5173` (when running)
 
-[📖 Full Documentation](./frontend/README.md)
+    [📖 Full Documentation](./frontend/README.md)
 
-### **Creature Service** ✅ **LIVE**
-The first service is fully operational with species management!
+    ### **Creature Service** ✅ **LIVE**
+    The first service is fully operational with species management!
 
-**Implemented:**
-- ✅ Creature CRUD operations (Create, Read)
-- ✅ Species management (Create, Read)
-- ✅ Two-table relational schema (Creature ↔ Species)
-- ✅ RESTful API with Express
-- ✅ PostgreSQL database with Prisma ORM
-- ✅ Zod validation
-- ✅ Health check endpoint
-- ✅ CORS enabled
-- ✅ Database seeding with 11 species
-- ✅ 100% test coverage on service layer
+    **Implemented:**
+    - ✅ Creature CRUD operations (Create, Read)
+    - ✅ Species management (Create, Read)
+    - ✅ Two-table relational schema (Creature ↔ Species)
+    - ✅ RESTful API with Express
+    - ✅ PostgreSQL database with Prisma ORM
+    - ✅ Zod validation
+    - ✅ Health check endpoint
+    - ✅ CORS enabled
+    - ✅ Database seeding with 11 species
+    - ✅ 100% test coverage on service layer
 
-**Tech:**
-- Node.js + Express 5
-- Prisma + PostgreSQL with pg adapter
-- Zod validation
-- Jest testing
+    **Tech:**
+    - Node.js + Express 5
+    - Prisma + PostgreSQL with pg adapter
+    - Zod validation
+    - Jest testing
 
-**Endpoints:**
-- `GET /health` - Service health
-- `GET /creatures` - List all creatures with species
-- `GET /creatures/:id` - Get creature by ID with species
-- `POST /creatures` - Create new creature
-- `GET /creatures/species` - List all species
-- `POST /creatures/species` - Create new species
+    **Endpoints:**
+    - `GET /health` - Service health
+    - `GET /creatures` - List all creatures with species
+    - `GET /creatures/:id` - Get creature by ID with species
+    - `POST /creatures` - Create new creature
+    - `GET /creatures/species` - List all species
+    - `POST /creatures/species` - Create new species
+    - `PATCH /creatures/species/:name` - Update species lore
 
-**Database Schema:**
-- Species table (name, lore)
-- Creature table (id, name, speciesName, createdAt)
-- Foreign key relationship: Creature.speciesName → Species.name
+    **Database Schema:**
+    - Species table (name, lore)
+    - Creature table (id, name, speciesName, createdAt)
+    - Foreign key relationship: Creature.speciesName → Species.name
 
-[📖 Full Documentation](./creature-service/README.md)
+    [📖 Full Documentation](./creature-service/README.md)
 
----
+    ---
 
----
+    ---
 
-### **Biome Service** 🚧 **PLANNED**
-Handles:
-- Biomes, climates, and special rules
-- Creature–biome compatibility
+    ### **Biome Service** 🚧 **PLANNED**
+    Handles:
+    - Biomes, climates, and special rules
+    - Creature–biome compatibility
 
-Tech:
-- Django REST Framework
-- Postgres
+    Tech:
+    - Django REST Framework
+    - Postgres
 
----
+    ---
 
-### **Event Service** 🚧 **PLANNED**
-Handles:
-- Append-only event log
-- Ecosystem history
-- Filtering & querying
+    ### **Event Service** 🚧 **PLANNED**
+    Handles:
+    - Append-only event log
+    - Ecosystem history
+    - Filtering & querying
 
-Tech:
-- Node.js
-- DynamoDB
+    Tech:
+    - Node.js
+    - DynamoDB
 
----
+    ---
 
-### **API Gateway** 🚧 **PLANNED**
-The single external touchpoint for all services.
+    ### **API Gateway** 🚧 **PLANNED**
+    The single external touchpoint for all services.
 
-Tech:
-- Node.js
-- Express or Fastify
-- OpenAPI contract-first design
+    Tech:
+    - Node.js
+    - Express or Fastify
+    - OpenAPI contract-first design
 
----
+    ---
 
 ## Quick Start
 
@@ -393,7 +394,8 @@ Chose to model Species and Creature as separate tables to:
 - Implemented proper request validation to prevent malformed payloads from causing database errors or inconsistent writes.
 - Refactored early controller logic to separate database operations into the service layer, improving clarity and maintainability.
 - Fixed Prisma 7 seeding issues by correcting config setup, file placement, and seed script execution.
- - Clarified how browser-enforced CORS works and configured the creature service to explicitly allow the React frontend origin during local development.
+- Clarified how browser-enforced CORS works and configured the creature service to explicitly allow the React frontend origin during local development.
+- Dove deep into RESTful architecture principles, including proper HTTP verb usage, status codes, and error handling.
 
 
 ---

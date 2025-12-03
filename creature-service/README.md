@@ -172,6 +172,41 @@ Creates a new species that can be assigned to creatures.
 }
 ```
 
+### Update Species Lore
+```
+PATCH /creatures/species/:name
+```
+Updates the lore for an existing species. The species name is treated as an immutable identifier; this endpoint only updates `lore`.
+
+**Parameters:**
+- `name` (string, path) - Species name to update
+
+**Request Body:**
+```json
+{
+  "lore": "New field report describing this species in more detail."
+}
+```
+
+**Behavior:**
+- If `lore` is **missing, null, or empty/whitespace-only**, the request is rejected and the existing lore is left unchanged.
+- Only the `lore` field is updated; the species `name` cannot be changed via this endpoint.
+
+**Successful Response:** `200 OK`
+```json
+{
+  "name": "Gleeble",
+  "lore": "New field report describing this species in more detail."
+}
+```
+
+**Error Response:** `400 Bad Request`
+```json
+{
+  "error": "No data provided"
+}
+```
+
 ## Available Species
 
 The following species are recognized by the Department:

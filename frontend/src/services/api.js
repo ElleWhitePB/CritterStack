@@ -54,4 +54,19 @@ export const api = {
     }
     return response.json();
   },
+
+  async updateSpecies(data) {
+    const response = await fetch(`${API_BASE_URL}/creatures/species/${data.name}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error || "Failed to update species");
+    }
+    return response.json();
+  },
 };
