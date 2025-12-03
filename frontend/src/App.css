@@ -372,12 +372,26 @@
 
 .species-lore p {
   margin: 0;
-  padding: 16px;
-  color: #3e2723;
-  font-size: 0.95rem;
-  line-height: 1.6;
-  font-style: italic;
+	  padding: 0;
+	  color: #3e2723;
+	  font-size: 0.95rem;
+	  line-height: 1.6;
+	  font-style: italic;
 }
+
+	.species-lore-content {
+	  display: flex;
+	  align-items: center;
+	  justify-content: space-between;
+	  gap: 12px;
+	  padding: 16px;
+	}
+
+	.btn-lore-inline {
+	  padding: 6px 12px;
+	  font-size: 0.75rem;
+	  white-space: nowrap;
+	}
 
 @keyframes fadeIn {
   from {

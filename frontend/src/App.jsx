@@ -13,6 +13,8 @@ function App() {
   const [toast, setToast] = useState(null);
   const [species, setSpecies] = useState([]);
   const [isNewSpecies, setIsNewSpecies] = useState(false);
+	const [isEditingLore, setIsEditingLore] = useState(false);
+	const [loreDraft, setLoreDraft] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const creaturesPerPage = 6;
 
@@ -36,6 +38,8 @@ function App() {
   const resetForm = () => {
     setNewCreature({ name: "", speciesName: "", lore: "" });
     setIsNewSpecies(false);
+		setIsEditingLore(false);
+		setLoreDraft("");
   };
 
   const handleGetAllCreatures = async () => {
@@ -155,6 +159,8 @@ function App() {
 
   const handleSpeciesChange = (e) => {
     const speciesName = e.target.value;
+		setIsEditingLore(false);
+		setLoreDraft("");
     if (speciesName === "new") {
       setIsNewSpecies(true);
       setNewCreature({ ...newCreature, speciesName: "", lore: "" });
@@ -163,6 +169,43 @@ function App() {
       setNewCreature({ ...newCreature, speciesName, lore: "" });
     }
   };
+
+	const handleSaveLoreReport = async () => {
+		if (!newCreature.speciesName) {
+			showToast("Please select a species", "error");
+			return;
+		}
+
+		if (!loreDraft || !loreDraft.trim()) {
+			showToast("Please enter some lore before saving", "error");
+			return;
+		}
+
+		setLoading(true);
+		try {
+			const updatedSpecies = await api.updateSpecies({
+				name: newCreature.speciesName,
+				lore: loreDraft,
+			});
+
+			setSpecies((prev) =>
+				prev.map((s) => (s.name === updatedSpecies.name ? updatedSpecies : s)),
+			);
+
+			showToast(`Lore report added for ${updatedSpecies.name}`);
+			setIsEditingLore(false);
+			setLoreDraft("");
+		} catch (error) {
+			showToast(error.message, "error");
+		} finally {
+			setLoading(false);
+		}
+	};
+
+	const selectedSpecies = species.find((s) => s.name === newCreature.speciesName);
+	const selectedSpeciesLore = selectedSpecies?.lore;
+	const defaultLoreMessage =
+		"Lore unavailable. Every expert sent to study this creature has returned with more questions than equipment.";
 
   return (
 		<div className="app">
@@ -279,12 +322,48 @@ function App() {
 										<span className="lore-icon">📜</span>
 										<strong>Species Lore</strong>
 									</div>
-									<p>
-										{species.find((s) => s.name === newCreature.speciesName)?.lore ||
-											"Lore unavailable. Every expert sent to study this creature has returned with more questions than equipment."}
-									</p>
-								</div>
-							)}
+										{isEditingLore ? (
+											<div className="form-group new-species-field">
+												<label htmlFor="existing-species-lore">
+													Species Lore (optional)
+												</label>
+												<textarea
+													id="existing-species-lore"
+													placeholder="Enter species lore"
+													value={loreDraft}
+													onChange={(e) => setLoreDraft(e.target.value)}
+													className="textarea"
+													rows="4"
+												/>
+												<button
+													type="button"
+													onClick={handleSaveLoreReport}
+													className="btn btn-primary"
+													disabled={loading}
+												>
+													Save Report
+												</button>
+											</div>
+										) : (
+											<div className="species-lore-content">
+												<p>{selectedSpeciesLore || defaultLoreMessage}</p>
+												{!selectedSpeciesLore && (
+													<button
+														type="button"
+														className="btn btn-secondary btn-lore-inline"
+														onClick={() => {
+															setIsEditingLore(true);
+															setLoreDraft("");
+														}}
+														disabled={loading}
+													>
+														Add Report
+													</button>
+												)}
+											</div>
+										)}
+									</div>
+								)}
 						</div>
 
 						<button
@@ -419,10 +498,9 @@ function App() {
 									<span className="lore-icon">📜</span>
 									<strong>Species Lore</strong>
 								</div>
-								<p>
-									{selectedCreature.species?.lore ||
-										"Lore unavailable. Every expert sent to study this creature has returned with more questions than equipment."}
-								</p>
+									<p>
+										{selectedCreature.species?.lore || defaultLoreMessage}
+									</p>
 							</div>
 						</div>
 					)}

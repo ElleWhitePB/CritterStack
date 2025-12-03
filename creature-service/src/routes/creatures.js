@@ -1,7 +1,14 @@
 // src/routes/creatures.js
 import express from "express";
 import { CreateCreatureSchema } from "../schemas/creature.js";
-import { getAllCreatures, createCreature, getCreatureById, getAllSpecies, createSpecies } from "../services/creatureService.js";
+import {
+	getAllCreatures,
+	createCreature,
+	getCreatureById,
+	getAllSpecies,
+	createSpecies,
+	updateSpecies,
+} from "../services/creatureService.js";
 
 const router = express.Router();
 
@@ -53,6 +60,34 @@ router.post("/species", async (req, res) => {
     } catch (err) {
         res.status(400).json({ error: err.message });
     }
+});
+
+// PATCH /creatures/species/:name
+router.patch("/species/:name", async (req, res) => {
+	try {
+		const name = req.params.name;
+		const { lore } = req.body;
+
+		if (!name) {
+			return res.status(400).json({ error: "Species name is required" });
+		}
+
+		const hasLore =
+			typeof lore !== "undefined" &&
+			lore !== null &&
+			String(lore).trim() !== "";
+
+		if (!hasLore) {
+			return res.status(400).json({ error: "No data provided" });
+		}
+
+		const updateData = { lore };
+		const species = await updateSpecies(name, updateData);
+
+		res.json(species);
+	} catch (err) {
+		res.status(400).json({ error: err.message });
+	}
 });
 
 // POST /creatures

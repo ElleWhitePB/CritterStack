@@ -29,3 +29,10 @@ export async function createCreature(data) {
         data,
     });
 }
+
+export async function updateSpecies(name, data) {
+	return prisma.species.update({
+		where: { name: name },
+		data,
+	});
+}
