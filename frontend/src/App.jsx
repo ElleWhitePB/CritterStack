@@ -253,15 +253,15 @@ function App() {
 
 						<div className="form-group">
 							<label htmlFor="species">Species</label>
-							<select
-								id="species"
-								value={isNewSpecies ? "new" : newCreature.speciesName}
-								onChange={handleSpeciesChange}
-								className="select"
-							>
-								<option value="" disabled>
-									Choose a species
-								</option>
+								<select
+									id="species"
+									value={isNewSpecies ? "new" : newCreature.speciesName}
+									onChange={handleSpeciesChange}
+									className="select"
+								>
+									<option value="" disabled hidden>
+										Choose a species
+									</option>
 								{species.map((s) => (
 									<option key={s.name} value={s.name}>
 										{s.name}
