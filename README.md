@@ -335,6 +335,7 @@ The initial milestone was designed to establish the foundation:
 - ✅ Two-table relational schema (Species + Creature tables)
 - ✅ `GET /creatures/species` - List all species
 - ✅ `POST /creatures/species` - Create new species
+- ✅ `PATCH /creatures/species/:name` - Update species lore
 - ✅ Database seeding with 11 unique species
 - ✅ CORS enabled for frontend integration
 - ✅ Comprehensive unit tests with Jest (100% service layer coverage)
