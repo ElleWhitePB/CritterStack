@@ -4,6 +4,72 @@ import { generateCreatureName, generateSpeciesName } from "./utils/nameGenerator
 import Toast from "./components/Toast";
 import "./App.css";
 
+
+const createRandomTwinkleSpot = () => {
+	// Bias a bit toward the sides so they peek around cards
+	const top = 10 + Math.random() * 80; // 10% - 90%
+	const useLeftSide = Math.random() < 0.5;
+	const horizontal = useLeftSide
+		? 4 + Math.random() * 14 // 4% - 18%
+		: 68 + Math.random() * 14; // 68% - 82%
+
+	return {
+		top: `${top}%`,
+		left: `${horizontal}%`,
+	};
+};
+
+function Twinkle({ emoji, durationMs, idleMs }) {
+	const [position, setPosition] = useState(() => createRandomTwinkleSpot());
+	const [visible, setVisible] = useState(false);
+
+	useEffect(() => {
+		let fadeTimeout;
+		let cycleInterval;
+
+		const runCycle = () => {
+			setPosition(createRandomTwinkleSpot());
+			setVisible(true);
+
+			fadeTimeout = setTimeout(() => {
+				setVisible(false);
+			}, durationMs);
+		};
+
+		runCycle();
+		cycleInterval = setInterval(runCycle, durationMs + idleMs);
+
+		return () => {
+			clearTimeout(fadeTimeout);
+			clearInterval(cycleInterval);
+		};
+	}, [durationMs, idleMs]);
+
+	return (
+		<span
+			className="background-twinkle"
+			style={{
+				top: position.top,
+				left: position.left,
+				opacity: visible ? 0.9 : 0,
+			}}
+			aria-hidden="true"
+		>
+			{emoji}
+		</span>
+	);
+}
+
+function BackgroundTwinkles() {
+	return (
+		<div className="background-twinkles" aria-hidden="true">
+			<Twinkle emoji="✨" durationMs={700} idleMs={2200} />
+			<Twinkle emoji="🍃" durationMs={900} idleMs={2600} />
+			<Twinkle emoji="✨" durationMs={800} idleMs={2500} />
+		</div>
+	);
+}
+
 function App() {
   const [creatures, setCreatures] = useState([]);
   const [selectedCreature, setSelectedCreature] = useState(null);
@@ -217,8 +283,9 @@ function App() {
 	const defaultLoreMessage =
 		"Lore unavailable. Every expert sent to study this creature has returned with more questions than equipment.";
 
-  return (
-		<div className="app">
+	  return (
+			<div className="app">
+				<BackgroundTwinkles />
 			{toast && (
 				<Toast
 					message={toast.message}
