@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { api } from "./services/api";
 import { generateCreatureName, generateSpeciesName } from "./utils/nameGenerator";
 import Toast from "./components/Toast";
@@ -16,7 +16,8 @@ function App() {
 	const [isEditingLore, setIsEditingLore] = useState(false);
 	const [loreDraft, setLoreDraft] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const creaturesPerPage = 6;
+	  const creaturesPerPage = 6;
+	  const creatureDetailRef = useRef(null);
 
   // Fetch species on component mount
   useEffect(() => {
@@ -30,6 +31,15 @@ function App() {
     };
     fetchSpecies();
   }, []);
+
+	  useEffect(() => {
+	    if (selectedCreature && creatureDetailRef.current) {
+	      creatureDetailRef.current.scrollIntoView({
+	        behavior: "smooth",
+	        block: "start",
+	      });
+	    }
+	  }, [selectedCreature]);
 
   const showToast = (message, type = "success") => {
     setToast({ message, type });
@@ -459,7 +469,7 @@ function App() {
 				</section>
 
 				{/* Get by ID Section */}
-				<section className="card">
+				<section className="card" ref={creatureDetailRef}>
 					<h2>Get Creature by ID</h2>
 					<div className="form-row">
 						<input
@@ -480,7 +490,7 @@ function App() {
 					</div>
 
 					{selectedCreature && (
-						<div className="creature-detail">
+					<div className="creature-detail">
 							<h3>{selectedCreature.name}</h3>
 							<p>
 								<strong>ID:</strong> {selectedCreature.id}

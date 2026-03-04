@@ -1,0 +1,23 @@
+# Python bytecode and cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+venv/
+.env
+*.env
+
+# Django / local DB files
+*.sqlite3
+
+# Logs
+*.log
+
+# OS / editor cruft
+.DS_Store
+*.swp
+*.swo
+.idea/
+.vscode/
+
