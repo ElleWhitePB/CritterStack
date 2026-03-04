@@ -78,6 +78,7 @@ npm run seed
 ```
 
 The seed script uses the Prisma client under the hood and expects:
+
 - `DATABASE_URL` to be set correctly
 - migrations to have been applied beforehand
 
@@ -94,6 +95,7 @@ npx prisma migrate reset
 ```
 
 This will:
+
 - Drop the database
 - Recreate it
 - Apply all migrations
@@ -109,4 +111,3 @@ Use this when things feel out of sync (e.g. tables don’t match schema, or seed
 - **Multiple services:** if/when biome-service or evolution-engine get their own databases, each should have **its own Prisma schema and migration history**.
 - **ESM setup:** the Prisma client is imported from a small `src/db/client.js` helper; mirror this pattern in new services instead of importing directly everywhere.
 - **Don’t edit generated client files:** always change the schema + run migrations instead.
-

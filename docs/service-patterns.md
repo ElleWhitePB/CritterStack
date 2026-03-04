@@ -9,11 +9,13 @@ This document captures the patterns you’re using across backend services so ne
 Each service follows a simple layering approach:
 
 - **Routes / Controllers** (`src/routes/*.js`)
+
   - Define HTTP routes and wire them to handlers.
   - Parse route params and basic query parameters.
   - Call into service functions.
 
 - **Services** (`src/services/*.js`)
+
   - Implement business logic.
   - Talk to Prisma / the database.
   - Never touch Express request/response objects.
@@ -33,6 +35,7 @@ This separation makes it easy to test service logic without spinning up Express.
 - Routes are grouped by resource in a single file (e.g. `creatures.js`).
 
 Example patterns:
+
 - `GET /creatures` – list
 - `GET /creatures/:id` – detail
 - `POST /creatures` – create
@@ -48,6 +51,7 @@ Example patterns:
 - Validate request bodies at the **route level** before calling service functions.
 
 Example:
+
 - Parse `req.body` with a Zod schema.
 - Return `400` with a simple `{ error: message }` payload if validation fails.
 
@@ -62,6 +66,7 @@ This keeps services focused on domain logic and makes validation rules easy to f
 - Routes call these functions and translate results into HTTP responses.
 
 Benefits:
+
 - Service functions are easy to unit test.
 - If you ever move away from Prisma, you only need to change the service layer.
 
@@ -102,8 +107,8 @@ Follow the existing `creature-service` patterns as a reference implementation.
 - This keeps frontend error handling straightforward.
 
 When you add new services (biome, evolution), aim to:
+
 - Mirror these patterns.
 - Reuse naming and structure (e.g. `/biomes`, `/biomes/:id`).
 
 That way the whole stack feels like one coherent world, not a collection of unrelated micro-APIs.
-

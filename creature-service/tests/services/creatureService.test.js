@@ -25,7 +25,13 @@ jest.unstable_mockModule("../../src/db/client.js", () => ({
 }));
 
 // Import after mocking
-const { getAllCreatures, getCreatureById, createCreature, getAllSpecies, createSpecies } = await import("../../src/services/creatureService.js");
+const {
+  getAllCreatures,
+  getCreatureById,
+  createCreature,
+  getAllSpecies,
+  createSpecies,
+} = await import("../../src/services/creatureService.js");
 
 describe("Creature Service", () => {
   beforeEach(() => {
@@ -47,7 +53,10 @@ describe("Creature Service", () => {
           name: "Spike",
           speciesName: "Moon-Pip",
           createdAt: new Date(),
-          species: { name: "Moon-Pip", lore: "Shy, bioluminescent nocturnal creatures" },
+          species: {
+            name: "Moon-Pip",
+            lore: "Shy, bioluminescent nocturnal creatures",
+          },
         },
       ];
 
@@ -57,7 +66,9 @@ describe("Creature Service", () => {
 
       expect(result).toEqual(mockCreatures);
       expect(mockCreatureFindMany).toHaveBeenCalledTimes(1);
-      expect(mockCreatureFindMany).toHaveBeenCalledWith({ include: { species: true } });
+      expect(mockCreatureFindMany).toHaveBeenCalledWith({
+        include: { species: true },
+      });
     });
 
     it("should return empty array when no creatures exist", async () => {
@@ -73,7 +84,9 @@ describe("Creature Service", () => {
       const dbError = new Error("Database connection failed");
       mockCreatureFindMany.mockRejectedValue(dbError);
 
-      await expect(getAllCreatures()).rejects.toThrow("Database connection failed");
+      await expect(getAllCreatures()).rejects.toThrow(
+        "Database connection failed",
+      );
       expect(mockCreatureFindMany).toHaveBeenCalledTimes(1);
     });
   });
@@ -117,7 +130,9 @@ describe("Creature Service", () => {
       const dbError = new Error("Database connection failed");
       mockCreatureFindUnique.mockRejectedValue(dbError);
 
-      await expect(getCreatureById(1)).rejects.toThrow("Database connection failed");
+      await expect(getCreatureById(1)).rejects.toThrow(
+        "Database connection failed",
+      );
       expect(mockCreatureFindUnique).toHaveBeenCalledTimes(1);
     });
   });
@@ -178,7 +193,9 @@ describe("Creature Service", () => {
       const dbError = new Error("Database insert failed");
       mockCreatureCreate.mockRejectedValue(dbError);
 
-      await expect(createCreature(newCreatureData)).rejects.toThrow("Database insert failed");
+      await expect(createCreature(newCreatureData)).rejects.toThrow(
+        "Database insert failed",
+      );
       expect(mockCreatureCreate).toHaveBeenCalledTimes(1);
     });
   });
@@ -186,9 +203,18 @@ describe("Creature Service", () => {
   describe("getAllSpecies", () => {
     it("should return all species", async () => {
       const mockSpecies = [
-        { name: "Gleeble", lore: "Tiny gelatinous chaos-beings that emit musical chirps when startled." },
-        { name: "Moon-Pip", lore: "Shy, bioluminescent nocturnal creatures whose freckles pulse in soft patterns." },
-        { name: "Thornbellow", lore: "Thorny creatures with deep, resonant calls." },
+        {
+          name: "Gleeble",
+          lore: "Tiny gelatinous chaos-beings that emit musical chirps when startled.",
+        },
+        {
+          name: "Moon-Pip",
+          lore: "Shy, bioluminescent nocturnal creatures whose freckles pulse in soft patterns.",
+        },
+        {
+          name: "Thornbellow",
+          lore: "Thorny creatures with deep, resonant calls.",
+        },
       ];
 
       mockSpeciesFindMany.mockResolvedValue(mockSpecies);
@@ -213,7 +239,9 @@ describe("Creature Service", () => {
       const dbError = new Error("Database connection failed");
       mockSpeciesFindMany.mockRejectedValue(dbError);
 
-      await expect(getAllSpecies()).rejects.toThrow("Database connection failed");
+      await expect(getAllSpecies()).rejects.toThrow(
+        "Database connection failed",
+      );
       expect(mockSpeciesFindMany).toHaveBeenCalledTimes(1);
     });
   });
@@ -268,7 +296,9 @@ describe("Creature Service", () => {
       const dbError = new Error("Unique constraint failed: Species.name");
       mockSpeciesCreate.mockRejectedValue(dbError);
 
-      await expect(createSpecies(newSpeciesData)).rejects.toThrow("Unique constraint failed: Species.name");
+      await expect(createSpecies(newSpeciesData)).rejects.toThrow(
+        "Unique constraint failed: Species.name",
+      );
       expect(mockSpeciesCreate).toHaveBeenCalledTimes(1);
     });
   });

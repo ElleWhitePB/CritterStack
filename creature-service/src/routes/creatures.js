@@ -2,105 +2,105 @@
 import express from "express";
 import { CreateCreatureSchema } from "../schemas/creature.js";
 import {
-	getAllCreatures,
-	createCreature,
-	getCreatureById,
-	getAllSpecies,
-	createSpecies,
-	updateSpecies,
+  getAllCreatures,
+  createCreature,
+  getCreatureById,
+  getAllSpecies,
+  createSpecies,
+  updateSpecies,
 } from "../services/creatureService.js";
 
 const router = express.Router();
 
 // GET /creatures/species
 router.get("/species", async (req, res) => {
-    const species = await getAllSpecies();
-    res.json(species);
+  const species = await getAllSpecies();
+  res.json(species);
 });
 
 // GET /creatures
 router.get("/", async (req, res) => {
-    const creatures = await getAllCreatures();
+  const creatures = await getAllCreatures();
 
-    if (!creatures) {
-        return res.status(404).json({ error: "No creatures no found" });
-    }
+  if (!creatures) {
+    return res.status(404).json({ error: "No creatures no found" });
+  }
 
-    res.json(creatures);
+  res.json(creatures);
 });
 
 // GET /creatures/:id
 router.get("/:id", async (req, res) => {
-    const id = Number(req.params.id);
+  const id = Number(req.params.id);
 
-    if (Number.isNaN(id)) {
-        return res.status(400).json({ error: "Invalid ID" });
-    }
+  if (Number.isNaN(id)) {
+    return res.status(400).json({ error: "Invalid ID" });
+  }
 
-    const creature = await getCreatureById(id);
+  const creature = await getCreatureById(id);
 
-    if (!creature) {
-        return res.status(404).json({ error: "Creature not found" });
-    }
+  if (!creature) {
+    return res.status(404).json({ error: "Creature not found" });
+  }
 
-    res.json(creature);
+  res.json(creature);
 });
 
 // POST /species
 router.post("/species", async (req, res) => {
-    try {
-        const { name, lore } = req.body;
+  try {
+    const { name, lore } = req.body;
 
-        if (!name) {
-            return res.status(400).json({ error: "Species name is required" });
-        }
-
-        const species = await createSpecies({ name, lore: lore || null });
-        res.status(201).json(species);
-    } catch (err) {
-        res.status(400).json({ error: err.message });
+    if (!name) {
+      return res.status(400).json({ error: "Species name is required" });
     }
+
+    const species = await createSpecies({ name, lore: lore || null });
+    res.status(201).json(species);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
 });
 
 // PATCH /creatures/species/:name
 router.patch("/species/:name", async (req, res) => {
-	try {
-		const name = req.params.name;
-		const { lore } = req.body;
+  try {
+    const name = req.params.name;
+    const { lore } = req.body;
 
-		if (!name) {
-			return res.status(400).json({ error: "Species name is required" });
-		}
+    if (!name) {
+      return res.status(400).json({ error: "Species name is required" });
+    }
 
-		const hasLore =
-			typeof lore !== "undefined" &&
-			lore !== null &&
-			String(lore).trim() !== "";
+    const hasLore =
+      typeof lore !== "undefined" &&
+      lore !== null &&
+      String(lore).trim() !== "";
 
-		if (!hasLore) {
-			return res.status(400).json({ error: "No data provided" });
-		}
+    if (!hasLore) {
+      return res.status(400).json({ error: "No data provided" });
+    }
 
-		const updateData = { lore };
-		const species = await updateSpecies(name, updateData);
+    const updateData = { lore };
+    const species = await updateSpecies(name, updateData);
 
-		res.json(species);
-	} catch (err) {
-		res.status(400).json({ error: err.message });
-	}
+    res.json(species);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
 });
 
 // POST /creatures
 router.post("/", async (req, res) => {
-    try {
-        const parsed = CreateCreatureSchema.parse(req.body);
+  try {
+    const parsed = CreateCreatureSchema.parse(req.body);
 
-        const creature = await createCreature(parsed);
+    const creature = await createCreature(parsed);
 
-        res.status(201).json(creature);
-    } catch (err) {
-        res.status(400).json({ error: err.message });
-    }
+    res.status(201).json(creature);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
 });
 
 export default router;

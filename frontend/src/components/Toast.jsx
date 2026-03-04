@@ -13,12 +13,9 @@ export default function Toast({ message, type = "success", onClose }) {
   return (
     <div className={`toast toast-${type}`}>
       <div className="toast-content">
-        <span className="toast-icon">
-          {type === "success" ? "✓" : "✕"}
-        </span>
+        <span className="toast-icon">{type === "success" ? "✓" : "✕"}</span>
         <span className="toast-message">{message}</span>
       </div>
     </div>
   );
 }
-

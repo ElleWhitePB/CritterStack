@@ -2,6 +2,6 @@
 import { z } from "zod";
 
 export const CreateCreatureSchema = z.object({
-    name: z.string(),
-    speciesName: z.string(),
+  name: z.string(),
+  speciesName: z.string(),
 });

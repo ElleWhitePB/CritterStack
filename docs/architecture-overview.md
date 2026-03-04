@@ -9,6 +9,7 @@ This document answers the question: **“What even is this project?”** It desc
 CritterStack is a small distributed system for tracking peculiar creatures and their world.
 
 Planned/core services:
+
 - **creature-service** – CRUD for creatures and species.
 - **biome-service** – Describes locations/biomes where creatures live.
 - **evolution-engine** – Runs background processes that evolve creatures over time.
@@ -21,6 +22,7 @@ At the moment, **creature-service + frontend** are the parts that actually exist
 ## Service Responsibilities
 
 ### creature-service
+
 - **Domain:** Creatures, species, and their core metadata.
 - **Endpoints:**
   - `GET /creatures` – list creatures
@@ -33,6 +35,7 @@ At the moment, **creature-service + frontend** are the parts that actually exist
 - **Clients:** React frontend for now; future services should call via HTTP.
 
 ### biome-service (planned)
+
 - **Domain:** Biomes / locations, environmental tags, and what species prefer which areas.
 - **Responsibilities:**
   - Define biomes (e.g. Emberwood, Hollow Fen, Luminous Thicket).
@@ -41,6 +44,7 @@ At the moment, **creature-service + frontend** are the parts that actually exist
 - **Database:** Its own Postgres schema or database; never writes directly into creature-service tables.
 
 ### evolution-engine (planned)
+
 - **Domain:** Time-based changes and simulations (aging, evolving, migrating).
 - **Responsibilities:**
   - Consume events from other services (creature created, moved, observed).
@@ -48,6 +52,7 @@ At the moment, **creature-service + frontend** are the parts that actually exist
 - **Database:** Owns its own persistence for runs, jobs, and derived stats.
 
 ### API Gateway (planned)
+
 - **Domain:** Single front-door.
 - **Responsibilities:**
   - Route `/api/creatures/*` requests to creature-service.
@@ -85,15 +90,18 @@ If another service needs species or creature data, it should **call creature-ser
 ## Tech Stack by Service
 
 - **creature-service**
+
   - Node.js, Express 5
   - Prisma ORM, PostgreSQL
   - Zod for request validation
   - Jest for tests
 
 - **biome-service** (proposed)
+
   - Mirror creature-service stack for consistency: Node.js + Express + Prisma + Postgres.
 
 - **evolution-engine** (proposed)
+
   - Node.js worker or simple queue processor.
   - Can also use Prisma + Postgres, but with its own schema.
 
@@ -101,4 +109,3 @@ If another service needs species or creature data, it should **call creature-ser
   - Lightweight Node.js/Express or edge function fronting the other services.
 
 Keeping stacks aligned lowers cognitive load and makes patterns reusable across the project.
-

@@ -5,9 +5,7 @@ export default {
     "^(\\.{1,2}/.*)\\.js$": "$1",
   },
   testMatch: ["**/tests/**/*.test.js"],
-  collectCoverageFrom: [
-    "src/services/**/*.js",
-  ],
+  collectCoverageFrom: ["src/services/**/*.js"],
   coverageThreshold: {
     global: {
       branches: 80,

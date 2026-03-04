@@ -17,10 +17,10 @@ app.use("/creatures", creaturesRouter);
 
 // Health endpoint
 app.get("/health", (req, res) => {
-    res.json({ status: "ok" });
+  res.json({ status: "ok" });
 });
 
 // Start server
 app.listen(3000, () => {
-    console.log("Creature Service listening on port 3000");
+  console.log("Creature Service listening on port 3000");
 });

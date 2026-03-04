@@ -12,6 +12,7 @@ This document captures the hard-won knowledge of getting CritterStack running lo
 - **npm:** comes with Node
 
 Optional but helpful:
+
 - **nodemon** for auto-reloading services
 - A REST client (VS Code REST, Insomnia, Postman) for poking at APIs
 
@@ -20,6 +21,7 @@ Optional but helpful:
 ## Repositories & Layout
 
 From the project root:
+
 - `creature-service/` – backend for creatures & species
 - `frontend/` – React/Vite frontend
 - `docs/` – project documentation (this file lives here)
@@ -74,6 +76,7 @@ npm run seed
 ```
 
 If the seed script fails, double-check:
+
 - `DATABASE_URL` in `.env`
 - that Postgres is running
 
@@ -86,6 +89,7 @@ npm run dev
 The API will be available at: `http://localhost:3000`.
 
 Key endpoints:
+
 - `GET /creatures`
 - `GET /creatures/:id`
 - `POST /creatures`
@@ -121,6 +125,7 @@ npx prisma migrate reset
 ```
 
 Follow the prompts; this will:
+
 - Drop and recreate the database
 - Re-apply all migrations
 - Optionally re-run the seed script
@@ -144,4 +149,3 @@ npm test
 This runs Jest tests for the service layer and helps ensure changes don’t break core behavior.
 
 From `frontend/`, you can add component and integration tests over time; for now, manual testing in the browser is the main loop.
-

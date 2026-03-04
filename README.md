@@ -1,5 +1,6 @@
 # CritterStack
-*A distributed microservice ecosystem maintained by the Department of Peculiar Creatures.*
+
+_A distributed microservice ecosystem maintained by the Department of Peculiar Creatures._
 
 ---
 
@@ -21,7 +22,7 @@ This project focuses on learning:
 - CI/CD basics and incremental delivery
 - Git workflows used by senior engineers
 
-The goal isn’t perfection — it’s *iteration*. Every service, improvement, and refactor teaches something new.
+The goal isn’t perfection — it’s _iteration_. Every service, improvement, and refactor teaches something new.
 
 ---
 
@@ -161,6 +162,7 @@ flowchart LR
 Want to see it in action? Here's how to run the current implementation:
 
 ### **Prerequisites**
+
 - Node.js (LTS version recommended)
 - Docker & Docker Compose
 - Git
@@ -215,6 +217,7 @@ npm run test:coverage   # Run with coverage report
 ## Getting Started (Detailed)
 
 ### **Prerequisites**
+
 - Node.js (LTS)
 - Python 3.10+ (for future services)
 - Docker (recommended)
@@ -287,7 +290,6 @@ CritterStack/
 
 ---
 
-
 ## Project Milestones (Learning Roadmap)
 
 Each milestone focuses on a distinct backend skillset.
@@ -300,7 +302,9 @@ Taken together, they build a full distributed ecosystem.
 **Goal:** Kickstart the entire project with the first domain service and database layer.
 
 #### Original Plan
+
 The initial milestone was designed to establish the foundation:
+
 - Initialize Node service
 - Docker Compose + Postgres
 - Prisma schema & migrations
@@ -312,6 +316,7 @@ The initial milestone was designed to establish the foundation:
 - Documentation
 
 **Original Tech Stack:**
+
 - Node.js + Fastify
 - Prisma + Postgres
 - Zod validation
@@ -319,6 +324,7 @@ The initial milestone was designed to establish the foundation:
 #### What Was Actually Implemented
 
 **Core Requirements (All Met):**
+
 - ✅ Node.js service with Express 5 (chose Express over Fastify)
 - ✅ Docker Compose with PostgreSQL
 - ✅ Prisma ORM with pg adapter
@@ -331,6 +337,7 @@ The initial milestone was designed to establish the foundation:
 - ✅ Documentation → **Comprehensive API docs**
 
 **Additional Features (Beyond Original Scope):**
+
 - ✅ `GET /creatures` - List all creatures (not in original plan)
 - ✅ Two-table relational schema (Species + Creature tables)
 - ✅ `GET /creatures/species` - List all species
@@ -344,6 +351,7 @@ The initial milestone was designed to establish the foundation:
 
 **Bonus: React Frontend (Not in Original Plan)**
 A complete web interface was added to demonstrate the API:
+
 - ✅ Modern UI with whimsical magical nature theme
 - ✅ Get all creatures with paginated card display (6 per page)
 - ✅ Get creature by ID with search and detail view
@@ -359,6 +367,7 @@ A complete web interface was added to demonstrate the API:
 - ✅ Form validation and reset functionality
 
 **Final Tech Stack:**
+
 - Backend: Node.js, Express 5, Prisma, PostgreSQL, Zod
 - Frontend: React 18, Vite
 - Testing: Jest with 100% service layer coverage
@@ -370,12 +379,14 @@ A complete web interface was added to demonstrate the API:
 
 **Express vs Fastify:**
 Chose Express 5 over Fastify for:
+
 - Broader ecosystem and community support
 - Simpler learning curve for the project
 - Excellent middleware ecosystem
 
 **Added Frontend:**
 While not in the original plan, the frontend provides:
+
 - Visual demonstration of the API
 - Better understanding of CORS and client-server interaction
 - User-friendly way to test endpoints
@@ -383,12 +394,13 @@ While not in the original plan, the frontend provides:
 
 **Two-Table Schema (Creature + Species):**
 Chose to model Species and Creature as separate tables to:
+
 - Explore foreign key relationships in Postgres/Prisma in a realistic but approachable way
 - Normalize shared species data (name, lore) across many creatures
 - Create more opportunities for rich lore/flair around species without duplicating text on every creature record
 
-
 #### Lessons Learned
+
 - Resolved Docker ↔ Postgres connectivity failures by correcting container networking, environment variables, and port configuration, resulting in a stable local development environment.
 - Updated the creature ID strategy and adjusted the Prisma schema, migrations, and service logic to eliminate type and insertion inconsistencies.
 - Corrected routing flow issues so requests consistently reached the intended controller and service layers.
@@ -398,7 +410,6 @@ Chose to model Species and Creature as separate tables to:
 - Clarified how browser-enforced CORS works and configured the creature service to explicitly allow the React frontend origin during local development.
 - Dove deep into RESTful architecture principles, including proper HTTP verb usage, status codes, and error handling.
 
-
 ---
 
 ### **M2: Biome Service MVP**
@@ -406,6 +417,7 @@ Chose to model Species and Creature as separate tables to:
 Bring in Django and DRF to establish a second service with its own domain.
 
 Includes:
+
 - Django + DRF project
 - Postgres integration
 - Biome model
@@ -423,6 +435,7 @@ Includes:
 Append-only history with DynamoDB.
 
 Includes:
+
 - Service scaffold
 - DynamoDB Local
 - Events table
@@ -440,6 +453,7 @@ Includes:
 Unified routing, validation, and documentation.
 
 Includes:
+
 - Gateway scaffold
 - Proxy routes for all services
 - Input validation
@@ -455,6 +469,7 @@ Includes:
 Intelligence layer for automated creature evolution.
 
 Includes:
+
 - Worker scaffold
 - Redis (BullMQ or RQ)
 - Scheduled evolution ticks
@@ -473,6 +488,7 @@ Includes:
 Improved reliability, debuggability, and dev experience.
 
 Includes:
+
 - GitHub Actions CI
 - Unit tests
 - Linting + type checking
@@ -489,6 +505,7 @@ Includes:
 An open sandbox for creative expansions.
 
 Ideas:
+
 - Creature interaction engine
 - Inter-biome migration
 - Rare anomalies

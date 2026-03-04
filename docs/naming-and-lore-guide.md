@@ -1,5 +1,6 @@
 # 🪄 Naming & Lore Guide
-*A style guide for species names, creature descriptions, and world flavor in the Department of Peculiar Creatures.*
+
+_A style guide for species names, creature descriptions, and world flavor in the Department of Peculiar Creatures._
 
 This document establishes the tone, structure, and creative rules used to name species and write lore throughout the project. It ensures new additions remain consistent with the world’s established voice.
 
@@ -8,6 +9,7 @@ This document establishes the tone, structure, and creative rules used to name s
 # 🎨 World Aesthetic
 
 Creatures in this world are whimsical, peculiar, magical-but-grounded beings. They feel more like:
+
 - woodland spirits,
 - strange natural phenomena,
 - soft little critters with quirks,
@@ -16,6 +18,7 @@ Creatures in this world are whimsical, peculiar, magical-but-grounded beings. Th
 …rather than high fantasy monsters or sci-fi aliens.
 
 The tone is:
+
 - gentle oddity
 - cozy magic
 - natural folklore
@@ -49,6 +52,7 @@ Species names across the project follow **organic, readable English-adjacent pat
 Many species combine two simple idea-words into a single name:
 
 Examples:
+
 - **Lanternback** (light + anatomy)
 - **Wandergrub** (behavior + creature form)
 - **Marrowfin** (body material + anatomy)
@@ -63,11 +67,13 @@ These compounds should be intuitive and evocative.
 Some names use a hyphen to emphasize their two-part nature:
 
 Examples:
+
 - **Moon-Pip**
 - **Star-Moth**
 - **Eye-Sprite**
 
 Hyphens are used when:
+
 - the two words each convey a clear meaning
 - the rhythm feels better split
 - the species name benefits from a little flair
@@ -83,6 +89,7 @@ The most consistent pattern is:
 `[Descriptor] + [Creature Word]`
 
 Descriptor examples:
+
 - Moss
 - Soot
 - Glow
@@ -96,6 +103,7 @@ Descriptor examples:
 - Echo
 
 Creature-form examples:
+
 - Pip
 - Nib
 - Grub
@@ -133,10 +141,10 @@ And maintain the same grounded, naturalistic tone.
 
 Occasionally, species might include a flavor tag—not as a formal taxonomy, but as folklore:
 
-- *Star-Touched*
-- *Burrow-Born*
-- *The Lesser*
-- *Of the Hollow*
+- _Star-Touched_
+- _Burrow-Born_
+- _The Lesser_
+- _Of the Hollow_
 
 Use extremely sparingly to avoid diluting the core naming style.
 
@@ -147,6 +155,7 @@ Use extremely sparingly to avoid diluting the core naming style.
 Lore in this world is short, evocative, and reads like a note from an in-world researcher who is both enchanted and slightly confused by these creatures.
 
 ### Tone Guidelines
+
 - Magical but not grandiose
 - Whimsical but not silly
 - Naturalistic but with subtle supernatural twists
@@ -154,10 +163,13 @@ Lore in this world is short, evocative, and reads like a note from an in-world r
 - Written with warmth and curiosity
 
 ### Length
+
 Most lore is **1–3 sentences**.
 
 ### Format
+
 A lore line should ideally:
+
 1. Describe the creature’s appearance or physical quirk
 2. Mention its behavior or temperament
 3. Offer a small magical or folkloric detail
@@ -177,6 +189,7 @@ Example formats:
 A shared vocabulary helps keep names consistent.
 
 **Descriptors:**
+
 - Moss
 - Glow
 - Drift
@@ -199,6 +212,7 @@ A shared vocabulary helps keep names consistent.
 - Tangle
 
 **Creature Words:**
+
 - Pip
 - Nib
 - Grub

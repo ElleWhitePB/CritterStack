@@ -19,12 +19,15 @@ This service provides a RESTful API for creating, retrieving, and managing pecul
 ## API Endpoints
 
 ### Health Check
+
 ```
 GET /health
 ```
+
 Returns service health status.
 
 **Response:**
+
 ```json
 {
   "status": "ok"
@@ -32,12 +35,15 @@ Returns service health status.
 ```
 
 ### Get All Creatures
+
 ```
 GET /creatures
 ```
+
 Retrieves all creatures from the database with their associated species information.
 
 **Response:**
+
 ```json
 [
   {
@@ -54,15 +60,19 @@ Retrieves all creatures from the database with their associated species informat
 ```
 
 ### Get Creature by ID
+
 ```
 GET /creatures/:id
 ```
+
 Retrieves a specific creature by ID with full species details.
 
 **Parameters:**
+
 - `id` (number) - Creature ID
 
 **Response:**
+
 ```json
 {
   "id": 1,
@@ -77,16 +87,20 @@ Retrieves a specific creature by ID with full species details.
 ```
 
 **Error Responses:**
+
 - `400` - Invalid ID format
 - `404` - Creature not found
 
 ### Create Creature
+
 ```
 POST /creatures
 ```
+
 Creates a new creature linked to an existing species.
 
 **Request Body:**
+
 ```json
 {
   "name": "Sparkles",
@@ -95,10 +109,12 @@ Creates a new creature linked to an existing species.
 ```
 
 **Validation:**
+
 - `name` (string, required) - Creature name
 - `speciesName` (string, required) - Species name (must exist in Species table)
 
 **Response:** `201 Created`
+
 ```json
 {
   "id": 2,
@@ -113,6 +129,7 @@ Creates a new creature linked to an existing species.
 ```
 
 **Error Response:** `400 Bad Request`
+
 ```json
 {
   "error": "Validation error message"
@@ -120,12 +137,15 @@ Creates a new creature linked to an existing species.
 ```
 
 ### Get All Species
+
 ```
 GET /creatures/species
 ```
+
 Retrieves all available species from the database.
 
 **Response:**
+
 ```json
 [
   {
@@ -140,12 +160,15 @@ Retrieves all available species from the database.
 ```
 
 ### Create Species
+
 ```
 POST /creatures/species
 ```
+
 Creates a new species that can be assigned to creatures.
 
 **Request Body:**
+
 ```json
 {
   "name": "Sparklebeast",
@@ -154,10 +177,12 @@ Creates a new species that can be assigned to creatures.
 ```
 
 **Validation:**
+
 - `name` (string, required) - Species name (must be unique)
 - `lore` (string, optional) - Species lore/description
 
 **Response:** `201 Created`
+
 ```json
 {
   "name": "Sparklebeast",
@@ -166,6 +191,7 @@ Creates a new species that can be assigned to creatures.
 ```
 
 **Error Response:** `400 Bad Request`
+
 ```json
 {
   "error": "Species name is required"
@@ -173,15 +199,19 @@ Creates a new species that can be assigned to creatures.
 ```
 
 ### Update Species Lore
+
 ```
 PATCH /creatures/species/:name
 ```
+
 Updates the lore for an existing species. The species name is treated as an immutable identifier; this endpoint only updates `lore`.
 
 **Parameters:**
+
 - `name` (string, path) - Species name to update
 
 **Request Body:**
+
 ```json
 {
   "lore": "New field report describing this species in more detail."
@@ -189,10 +219,12 @@ Updates the lore for an existing species. The species name is treated as an immu
 ```
 
 **Behavior:**
+
 - If `lore` is **missing, null, or empty/whitespace-only**, the request is rejected and the existing lore is left unchanged.
 - Only the `lore` field is updated; the species `name` cannot be changed via this endpoint.
 
 **Successful Response:** `200 OK`
+
 ```json
 {
   "name": "Gleeble",
@@ -201,6 +233,7 @@ Updates the lore for an existing species. The species name is treated as an immu
 ```
 
 **Error Response:** `400 Bad Request`
+
 ```json
 {
   "error": "No data provided"
@@ -210,6 +243,7 @@ Updates the lore for an existing species. The species name is treated as an immu
 ## Available Species
 
 The following species are recognized by the Department:
+
 - Gleeble
 - Moon-Pip
 - Thornbellow
@@ -243,6 +277,7 @@ model Creature {
 ```
 
 **Key Design Decisions:**
+
 - Species names are unique and serve as primary keys
 - Creatures have a foreign key relationship to Species
 - Lore is optional for species
@@ -251,6 +286,7 @@ model Creature {
 ## Setup & Installation
 
 ### Prerequisites
+
 - Node.js (LTS version)
 - PostgreSQL database
 - Docker (optional, for containerized database)
@@ -395,7 +431,7 @@ If port 3000 is already in use, modify the port in `src/index.js`:
 
 ```javascript
 app.listen(3001, () => {
-    console.log("Creature Service listening on port 3001");
+  console.log("Creature Service listening on port 3001");
 });
 ```
 
