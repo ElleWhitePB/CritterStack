@@ -98,6 +98,8 @@ function App() {
         const data = await api.getAllSpecies();
         setSpecies(data);
       } catch (error) {
+        // Log details for debugging while keeping the user-facing message friendly
+        console.error(error);
         showToast("Failed to load species", "error");
       }
     };
