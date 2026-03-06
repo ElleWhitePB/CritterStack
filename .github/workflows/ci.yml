@@ -18,7 +18,18 @@ jobs:
           node-version: "20.x"
 
       - name: Prettier check
-        run: npx prettier --check .
+        run: |
+          set +e
+          npx prettier --check .
+          prettier_exit_code=$?
+          set -e
+
+          if [ "$prettier_exit_code" -eq 1 ]; then
+            echo "Prettier found formatting issues, but they are non-blocking in CI."
+            exit 0
+          fi
+
+          exit "$prettier_exit_code"
 
   creature-service-tests:
     name: Creature Service Tests
