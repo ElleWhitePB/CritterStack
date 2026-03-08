@@ -1,0 +1,47 @@
+# Workspace tooling
+.augment/
+
+# Python bytecode and cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Python virtual environments and env files
+venv/
+.env
+*.env
+
+# Local database files
+*.sqlite3
+
+# Node dependencies and build artifacts
+node_modules/
+coverage/
+dist/
+dist-ssr/
+*.local
+
+# Generated Prisma client
+creature-service/src/generated/prisma/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# OS / editor cruft
+.DS_Store
+*.swp
+*.swo
+*.sw?
+.idea/
+**/.vscode/*
+!**/.vscode/extensions.json
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
