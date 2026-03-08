@@ -220,7 +220,7 @@ On every push and pull request, GitHub Actions currently runs:
 - `frontend` lint
 - `frontend` build
 
-This CI setup is intended to catch regressions in the currently live parts of the stack before merge.
+This CI setup is intended to catch regressions in the currently live parts of the stack before merge, and it represents the first completed slice of the M6 Observability & CI milestone.
 
 ---
 
@@ -304,6 +304,12 @@ CritterStack/
 
 Each milestone focuses on a distinct backend skillset.
 Taken together, they build a full distributed ecosystem.
+
+Current planning assumption:
+
+- **M2** starts on **2026-03-09**
+- **M2, M3, M4, M6, and M7** each run for **2 weeks**
+- **M5** runs for **3 weeks**
 
 ---
 
@@ -422,21 +428,7 @@ Chose to model Species and Creature as separate tables to:
 
 ---
 
-### **M1.5: CI Baseline**
-
-Establish a lightweight CI workflow for the parts of the stack that are already live.
-
-Includes:
-
-- GitHub Actions workflow
-- Creature Service test run in CI
-- Frontend lint run in CI
-- Frontend build verification in CI
-- Documentation for CI expectations
-
----
-
-### **M2: Biome Service MVP**
+### **M2: Biome Service MVP** _(Target: 2026-03-09 to 2026-03-22)_
 
 Bring in Django and DRF to establish a second service with its own domain.
 
@@ -454,7 +446,7 @@ Includes:
 
 ---
 
-### **M3: Event Service MVP**
+### **M3: Event Service MVP** _(Target: 2026-03-23 to 2026-04-05)_
 
 Append-only history with DynamoDB.
 
@@ -472,7 +464,7 @@ Includes:
 
 ---
 
-### **M4: API Gateway MVP**
+### **M4: API Gateway MVP** _(Target: 2026-04-06 to 2026-04-19)_
 
 Unified routing, validation, and documentation.
 
@@ -488,7 +480,7 @@ Includes:
 
 ---
 
-### **M5: Evolution Engine**
+### **M5: Evolution Engine** _(Target: 2026-04-20 to 2026-05-10)_
 
 Intelligence layer for automated creature evolution.
 
@@ -507,24 +499,28 @@ Includes:
 
 ---
 
-### **M6: Observability & CI**
+### **M6: Observability & CI** _(Target: 2026-05-11 to 2026-05-24)_ 🚧 **IN PROGRESS**
 
 Improved reliability, debuggability, and dev experience.
 
 Includes:
 
-- GitHub Actions CI
-- Unit tests
+- ✅ GitHub Actions CI workflow
+- ✅ Creature Service tests running in CI
+- ✅ Frontend lint running in CI
+- ✅ Frontend build verification in CI
+- ✅ Documentation for current CI expectations
+- Unit tests expansion
 - Linting + type checking
 - Structured logs
 - Tracing IDs
 - Optional `/metrics`
 - Debug Docker Compose configs
-- Documentation
+- Additional documentation and runbooks
 
 ---
 
-### **M7: Optional Fun Zone**
+### **M7: Optional Fun Zone** _(Target: 2026-05-25 to 2026-06-07)_
 
 An open sandbox for creative expansions.
 
@@ -562,21 +558,20 @@ gantt
 
     section Core Services
     M1: Creature Service MVP     :m1, 2025-11-25, 2025-12-20
-    M1.5: CI Baseline            :m15, 2025-12-21, 2025-12-28
-    M2: Biome Service MVP        :m2, 2026-01-05, 2026-01-25
-    M3: Event Service MVP        :m3, 2026-01-26, 2026-02-20
+    M2: Biome Service MVP        :m2, 2026-03-09, 2026-03-22
+    M3: Event Service MVP        :m3, 2026-03-23, 2026-04-05
 
     section Integration
-    M4: API Gateway MVP          :m4, 2026-02-21, 2026-03-07
+    M4: API Gateway MVP          :m4, 2026-04-06, 2026-04-19
 
     section Intelligence Layer
-    M5: Evolution Engine         :m5, 2026-03-08, 2026-04-10
+    M5: Evolution Engine         :m5, 2026-04-20, 2026-05-10
 
     section Platform Quality
-    M6: Observability & CI       :m6, 2026-04-11, 2026-05-02
+    M6: Observability & CI       :m6, 2026-05-11, 2026-05-24
 
     section Endless Expansion
-    M7: Optional Fun Zone        :m7, 2026-05-03, 2026-06-31
+    M7: Optional Fun Zone        :m7, 2026-05-25, 2026-06-07
 ```
 
 ---
