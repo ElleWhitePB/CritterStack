@@ -212,6 +212,16 @@ npm test                # Run all tests
 npm run test:coverage   # Run with coverage report
 ```
 
+### **Current CI**
+
+On every push and pull request, GitHub Actions currently runs:
+
+- `creature-service` test suite
+- `frontend` lint
+- `frontend` build
+
+This CI setup is intended to catch regressions in the currently live parts of the stack before merge.
+
 ---
 
 ## Getting Started (Detailed)
@@ -412,6 +422,20 @@ Chose to model Species and Creature as separate tables to:
 
 ---
 
+### **M1.5: CI Baseline**
+
+Establish a lightweight CI workflow for the parts of the stack that are already live.
+
+Includes:
+
+- GitHub Actions workflow
+- Creature Service test run in CI
+- Frontend lint run in CI
+- Frontend build verification in CI
+- Documentation for CI expectations
+
+---
+
 ### **M2: Biome Service MVP**
 
 Bring in Django and DRF to establish a second service with its own domain.
@@ -538,6 +562,7 @@ gantt
 
     section Core Services
     M1: Creature Service MVP     :m1, 2025-11-25, 2025-12-20
+    M1.5: CI Baseline            :m15, 2025-12-21, 2025-12-28
     M2: Biome Service MVP        :m2, 2026-01-05, 2026-01-25
     M3: Event Service MVP        :m3, 2026-01-26, 2026-02-20
 
