@@ -8,6 +8,7 @@ import {
   getAllSpecies,
   createSpecies,
   updateSpecies,
+  deleteCreature,
 } from "../services/creatureService.js";
 
 const router = express.Router();
@@ -87,6 +88,25 @@ router.patch("/species/:name", async (req, res) => {
     res.json(species);
   } catch (err) {
     res.status(400).json({ error: err.message });
+  }
+});
+
+// DELETE /creatures/:id
+router.delete("/:id", async (req, res) => {
+  const id = Number(req.params.id);
+
+  if (Number.isNaN(id)) {
+    return res.status(400).json({ error: "Invalid ID" });
+  }
+
+  try {
+    await deleteCreature(id);
+    res.status(204).send();
+  } catch (err) {
+    if (err.code === "P2025") {
+      return res.status(404).json({ error: "Creature not found" });
+    }
+    res.status(500).json({ error: "Failed to delete creature" });
   }
 });
 

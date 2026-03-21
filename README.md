@@ -72,6 +72,7 @@ flowchart LR
     - ✅ Toast notifications for feedback
     - ✅ Responsive design with nature theme
     - ✅ Clickable creature cards for detail view
+    - ✅ Delete creature from detail view
 
     **Tech:**
     - React 18 + Vite
@@ -87,7 +88,7 @@ flowchart LR
     The first service is fully operational with species management!
 
     **Implemented:**
-    - ✅ Creature CRUD operations (Create, Read)
+    - ✅ Creature CRUD operations (Create, Read, Delete)
     - ✅ Species management (Create, Read)
     - ✅ Two-table relational schema (Creature ↔ Species)
     - ✅ RESTful API with Express
@@ -112,6 +113,7 @@ flowchart LR
     - `GET /creatures/species` - List all species
     - `POST /creatures/species` - Create new species
     - `PATCH /creatures/species/:name` - Update species lore
+    - `DELETE /creatures/:id` - Delete a creature
 
     **Database Schema:**
     - Species table (name, lore)

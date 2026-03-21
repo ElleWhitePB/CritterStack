@@ -91,6 +91,27 @@ Retrieves a specific creature by ID with full species details.
 - `400` - Invalid ID format
 - `404` - Creature not found
 
+### Delete Creature
+
+```
+DELETE /creatures/:id
+```
+
+Permanently removes a creature from the database.
+
+**Parameters:**
+
+- `id` (number) - Creature ID
+
+**Response:** `204 No Content` (empty body)
+
+**Error Responses:**
+
+- `400` - Invalid ID format
+- `404` - Creature not found
+
+---
+
 ### Create Creature
 
 ```
@@ -451,7 +472,8 @@ npx prisma generate
 - [ ] Creature relationships
 - [x] Pagination for GET /creatures (implemented in frontend)
 - [ ] Filtering and search capabilities
-- [ ] Update and delete endpoints (PATCH /creatures/:id, DELETE /creatures/:id)
+- [x] Delete endpoint (DELETE /creatures/:id)
+- [ ] Update endpoint (PATCH /creatures/:id)
 - [ ] Update and delete species endpoints (PATCH /creatures/species/:name, DELETE /creatures/species/:name)
 - [ ] Request logging middleware
 
