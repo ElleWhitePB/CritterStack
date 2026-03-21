@@ -1,5 +1,6 @@
 # Workspace tooling
 .augment/
+.claude/
 
 # Python bytecode and cache
 __pycache__/
