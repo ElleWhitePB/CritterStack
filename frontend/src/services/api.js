@@ -55,6 +55,16 @@ export const api = {
     return response.json();
   },
 
+  async deleteCreature(id) {
+    const response = await fetch(`${API_BASE_URL}/creatures/${id}`, {
+      method: "DELETE",
+    });
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error || "Failed to delete creature");
+    }
+  },
+
   async updateSpecies(data) {
     const response = await fetch(
       `${API_BASE_URL}/creatures/species/${data.name}`,

@@ -72,6 +72,70 @@ function BackgroundTwinkles() {
   );
 }
 
+const SECTIONS = [
+  { id: "creatures", label: "Creatures", emoji: "🐾" },
+  { id: "biomes", label: "Biomes", emoji: "🌿" },
+  { id: "chronicle", label: "Chronicle", emoji: "📜" },
+];
+
+function SectionNav({ activeSection, onChange }) {
+  return (
+    <div className="section-nav-container">
+      <nav className="section-nav">
+        {SECTIONS.map((tab) => (
+          <button
+            key={tab.id}
+            className={`section-tab section-tab--${tab.id} ${activeSection === tab.id ? "active" : ""}`}
+            onClick={() => onChange(tab.id)}
+          >
+            <span className="tab-emoji">{tab.emoji}</span>
+            <span className="tab-label">{tab.label}</span>
+          </button>
+        ))}
+      </nav>
+    </div>
+  );
+}
+
+function BiomesSection() {
+  return (
+    <div className="section-content">
+      <section className="card card--biomes">
+        <div className="coming-soon">
+          <span className="coming-soon-icon">🗺️</span>
+          <h2>Biome Registry</h2>
+          <p className="coming-soon-text">
+            The Department&apos;s cartographers are still charting these
+            territories. Biome records are being transcribed from field notes
+            recovered during the Glimmerfen expedition.
+          </p>
+          <span className="coming-soon-badge">Service arriving in M2</span>
+        </div>
+      </section>
+    </div>
+  );
+}
+
+function ChronicleSection() {
+  return (
+    <div className="section-content">
+      <section className="card card--chronicle">
+        <div className="coming-soon">
+          <span className="coming-soon-icon">📚</span>
+          <h2>Event Chronicle</h2>
+          <p className="coming-soon-text">
+            The Department&apos;s archivist has stepped out. The Chronicle — a
+            complete record of creature sightings, biome incidents, and other
+            peculiarities — is still being compiled from water-damaged field
+            reports.
+          </p>
+          <span className="coming-soon-badge">Service arriving in M3</span>
+        </div>
+      </section>
+    </div>
+  );
+}
+
 function App() {
   const [creatures, setCreatures] = useState([]);
   const [selectedCreature, setSelectedCreature] = useState(null);
@@ -87,6 +151,7 @@ function App() {
   const [isNewSpecies, setIsNewSpecies] = useState(false);
   const [isEditingLore, setIsEditingLore] = useState(false);
   const [loreDraft, setLoreDraft] = useState("");
+  const [activeSection, setActiveSection] = useState("creatures");
   const [currentPage, setCurrentPage] = useState(1);
   const creaturesPerPage = 6;
   const creatureDetailRef = useRef(null);
@@ -114,6 +179,24 @@ function App() {
       });
     }
   }, [selectedCreature]);
+
+  const handleDeleteCreature = async (id) => {
+    setLoading(true);
+    try {
+      await api.deleteCreature(id);
+      showToast("Creature decommissioned.");
+      setSelectedCreature(null);
+      setCreatureId("");
+      if (creatures.length > 0) {
+        const updated = await api.getAllCreatures();
+        setCreatures(updated);
+      }
+    } catch (error) {
+      showToast(error.message, "error");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const showToast = (message, type = "success") => {
     setToast({ message, type });
@@ -318,7 +401,12 @@ function App() {
         <p className="subtitle">✨ Magical Creature Management System ✨</p>
       </header>
 
+      <SectionNav activeSection={activeSection} onChange={setActiveSection} />
+
       <main className="main">
+        {activeSection === "biomes" && <BiomesSection />}
+        {activeSection === "chronicle" && <ChronicleSection />}
+        {activeSection === "creatures" && <div className="section-content">
         {/* Create Creature Section */}
         <section className="card">
           <h2>Create Creature</h2>
@@ -587,9 +675,18 @@ function App() {
                 <strong>Created:</strong>{" "}
                 {new Date(selectedCreature.createdAt).toLocaleString()}
               </p>
-              <p>
-                <strong>Species:</strong> {selectedCreature.speciesName}
-              </p>
+              <div className="detail-species-row">
+                <p>
+                  <strong>Species:</strong> {selectedCreature.speciesName}
+                </p>
+                <button
+                  className="btn btn-danger btn-danger--sm"
+                  onClick={() => handleDeleteCreature(selectedCreature.id)}
+                  disabled={loading}
+                >
+                  🗑 Decommission
+                </button>
+              </div>
 
               <div className="species-lore">
                 <div className="lore-header">
@@ -601,6 +698,7 @@ function App() {
             </div>
           )}
         </section>
+        </div>}
       </main>
     </div>
   );

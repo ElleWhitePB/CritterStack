@@ -36,3 +36,9 @@ export async function updateSpecies(name, data) {
     data,
   });
 }
+
+export async function deleteCreature(id) {
+  return prisma.creature.delete({
+    where: { id },
+  });
+}
