@@ -59,9 +59,10 @@ flowchart LR
     ## Project at a Glance
 
     ### **Frontend** ✅ **LIVE**
-    A whimsical web interface for managing creatures.
+    A whimsical web interface for managing creatures and biomes.
 
     **Features:**
+    - ✅ Tab navigation (Creatures, Biomes, Chronicle)
     - ✅ View all creatures in paginated card layout (6 per page)
     - ✅ Search creature by ID with detail view
     - ✅ Create new creatures with form validation
@@ -73,6 +74,13 @@ flowchart LR
     - ✅ Responsive design with nature theme
     - ✅ Clickable creature cards for detail view
     - ✅ Delete creature from detail view
+    - ✅ Register Biome form with random name generator
+    - ✅ Paginated biome grid with active/inactive visual distinction
+    - ✅ Clickable biome cards that scroll to detail
+    - ✅ Biome detail card with inline field editing for missing values
+    - ✅ Active/inactive toggle via PATCH
+    - ✅ Delete biome with confirmation
+    - ✅ Sky-blue color palette for biome sections
 
     **Tech:**
     - React 18 + Vite
@@ -110,10 +118,10 @@ flowchart LR
     - `GET /creatures` - List all creatures with species
     - `GET /creatures/:id` - Get creature by ID with species
     - `POST /creatures` - Create new creature
+    - `DELETE /creatures/:id` - Delete a creature
     - `GET /creatures/species` - List all species
     - `POST /creatures/species` - Create new species
     - `PATCH /creatures/species/:name` - Update species lore
-    - `DELETE /creatures/:id` - Delete a creature
 
     **Database Schema:**
     - Species table (name, lore)
@@ -126,14 +134,38 @@ flowchart LR
 
     ---
 
-    ### **Biome Service** 🚧 **PLANNED**
-    Handles:
-    - Biomes, climates, and special rules
-    - Creature–biome compatibility
+    ### **Biome Service** ✅ **LIVE**
+    Manages ecosystems, environments, and the strange habitats the department has catalogued.
 
-    Tech:
-    - Django REST Framework
-    - Postgres
+    **Implemented:**
+    - ✅ Biome CRUD operations (Create, Read, Update, Delete)
+    - ✅ Active/inactive status toggling via PATCH
+    - ✅ List filtering (`?include_inactive=true`)
+    - ✅ RESTful API with Django REST Framework
+    - ✅ PostgreSQL integration (shared `critterstack` database)
+    - ✅ Serializer validation (name length, starts-with-letter, case-insensitive uniqueness)
+    - ✅ Health check endpoint
+    - ✅ CORS enabled for frontend integration
+    - ✅ Database seeding with 5 starter biomes
+    - ✅ 25 unit tests (9 serializer, 16 view)
+
+    **Tech:**
+    - Python 3.10+
+    - Django 4.2 + Django REST Framework
+    - PostgreSQL
+    - python-dotenv, django-cors-headers
+
+    **Endpoints:**
+    - `GET /health/` - Service health
+    - `GET /biomes/` - List active biomes (add `?include_inactive=true` for all)
+    - `GET /biomes/{id}/` - Get biome by ID
+    - `POST /biomes/` - Create new biome
+    - `PATCH /biomes/{id}/` - Partial update (including is_active toggle)
+    - `DELETE /biomes/{id}/` - Delete biome
+
+    **Access:** `http://localhost:8000` (when running)
+
+    [📖 Full Documentation](./biome-service/README.md)
 
     ---
 
@@ -181,14 +213,24 @@ cd docker
 docker compose up -d
 cd ..
 
-# 3. Set up and start the backend (in terminal 1)
+# 3. Set up and start creature-service (in terminal 1)
 cd creature-service
 npm install
 npx prisma migrate dev
 npm run dev
-# Backend runs on http://localhost:3000
+# Runs on http://localhost:3000
 
-# 4. Set up and start the frontend (in terminal 2)
+# 4. Set up and start biome-service (in terminal 2)
+cd biome-service
+python -m venv venv
+source venv/bin/activate       # Windows: venv\Scripts\activate
+pip install -r requirements.txt
+python manage.py migrate
+python manage.py seed_biomes
+python manage.py runserver 8000
+# Runs on http://localhost:8000
+
+# 5. Set up and start the frontend (in terminal 3)
 cd frontend
 npm install
 npm run dev
@@ -209,9 +251,15 @@ npm run dev
 ### **Run Tests**
 
 ```bash
+# creature-service
 cd creature-service
 npm test                # Run all tests
 npm run test:coverage   # Run with coverage report
+
+# biome-service
+cd biome-service
+source venv/bin/activate
+python manage.py test biomes
 ```
 
 ### **Current CI**
@@ -293,7 +341,7 @@ CritterStack/
 ├── docker/                    # ✅ Database containers
 │   └── docker-compose.yml    # PostgreSQL setup
 │
-├── biome-service/             # 🚧 Planned
+├── biome-service/             # ✅ Live
 ├── event-service/             # 🚧 Planned
 ├── api-gateway/               # 🚧 Planned
 │
@@ -430,21 +478,28 @@ Chose to model Species and Creature as separate tables to:
 
 ---
 
-### **M2: Biome Service MVP** _(Target: 2026-03-09 to 2026-03-22)_
+### **M2: Biome Service MVP** ✅ **COMPLETED** _(2026-03-09 to 2026-03-21)_
 
-Bring in Django and DRF to establish a second service with its own domain.
+Brought in Django and DRF to establish a second service with its own domain, plus a full biome UI in the frontend.
 
-Includes:
+**Implemented:**
 
-- Django + DRF project
-- Postgres integration
-- Biome model
-- Serializers + views
-- `POST /biomes`
-- `GET /biomes`
-- `/health`
-- Integration tests
-- Documentation
+- ✅ Django 4.2 + Django REST Framework project
+- ✅ PostgreSQL integration (shared `critterstack` database)
+- ✅ Biome model with id, name, description, climate, peril_rating, magic_level, is_active, created_at
+- ✅ Serializer with validation (name length, starts-with-letter, case-insensitive uniqueness)
+- ✅ Full CRUD views (list, detail, create, partial update, delete)
+- ✅ `GET /biomes/` — list active biomes (with `?include_inactive=true` support)
+- ✅ `GET /biomes/{id}/` — get biome by ID
+- ✅ `POST /biomes/` — create biome
+- ✅ `PATCH /biomes/{id}/` — partial update including is_active toggle
+- ✅ `DELETE /biomes/{id}/` — delete biome (with `?unlink_creatures=true` hook for M3)
+- ✅ `GET /health/` — health check endpoint
+- ✅ CORS enabled for frontend integration
+- ✅ Database seeding with 5 starter biomes
+- ✅ 25 unit tests (9 serializer, 16 view using APITestCase)
+- ✅ Documentation
+- ✅ Frontend biome UI: tab navigation, biome CRUD, paginated grid, detail cards with inline editing, active/inactive toggle, sky-blue color palette
 
 ---
 

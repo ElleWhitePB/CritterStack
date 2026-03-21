@@ -1,6 +1,6 @@
 # 🛠️ Local Development
 
-This document captures the hard-won knowledge of getting CritterStack running locally.
+This document captures the hard-won knowledge of getting CritterStack running locally. It covers creature-service (Node.js), biome-service (Django), and the React frontend.
 
 ---
 
@@ -22,15 +22,18 @@ Optional but helpful:
 
 From the project root:
 
-- `creature-service/` – backend for creatures & species
+- `creature-service/` – backend for creatures & species (Node.js + Express)
+- `biome-service/` – backend for biomes and environments (Django + DRF)
 - `frontend/` – React/Vite frontend
 - `docs/` – project documentation (this file lives here)
 
-Other services (biome-service, evolution-engine, gateway) will live in sibling folders.
+Other services (evolution-engine, gateway) will live in sibling folders.
 
 ---
 
 ## Environment Variables
+
+### creature-service
 
 In `creature-service/`, create a `.env` file:
 
@@ -39,6 +42,18 @@ DATABASE_URL="postgresql://postgres:postgres@localhost:5432/critterstack?schema=
 ```
 
 Make sure the protocol is **`postgresql://`** (not `postgres://`). The wrong scheme can connect but behave strangely.
+
+### biome-service
+
+In `biome-service/`, create a `.env` file:
+
+```env
+DATABASE_URL=postgresql://postgres:postgres@localhost:5432/critterstack
+SECRET_KEY=your-django-secret-key
+DEBUG=True
+ALLOWED_HOSTS=localhost,127.0.0.1
+CORS_ALLOWED_ORIGINS=http://localhost:5173
+```
 
 ---
 
@@ -99,6 +114,42 @@ Key endpoints:
 
 ---
 
+## Setting Up biome-service
+
+From the `biome-service/` directory:
+
+```bash
+python -m venv venv
+source venv/bin/activate       # Windows: venv\Scripts\activate
+pip install -r requirements.txt
+python manage.py migrate
+python manage.py seed_biomes
+```
+
+If the seed command fails, double-check:
+
+- `.env` is present and `DATABASE_URL` is correct
+- Postgres is running and the `critterstack` database exists
+
+### Running the service
+
+```bash
+python manage.py runserver 8000
+```
+
+The API will be available at: `http://localhost:8000`.
+
+Key endpoints:
+
+- `GET /health/`
+- `GET /biomes/`
+- `GET /biomes/{id}/`
+- `POST /biomes/`
+- `PATCH /biomes/{id}/`
+- `DELETE /biomes/{id}/`
+
+---
+
 ## Running the Frontend
 
 From the `frontend/` directory:
@@ -140,6 +191,8 @@ npm run seed
 
 ## Running Tests
 
+### creature-service
+
 From `creature-service/`:
 
 ```bash
@@ -147,5 +200,17 @@ npm test
 ```
 
 This runs Jest tests for the service layer and helps ensure changes don’t break core behavior.
+
+### biome-service
+
+From `biome-service/` (with the venv active):
+
+```bash
+python manage.py test biomes
+```
+
+This runs 25 unit tests: 9 covering serializer validation and 16 covering API view behaviour.
+
+### frontend
 
 From `frontend/`, you can add component and integration tests over time; for now, manual testing in the browser is the main loop.
