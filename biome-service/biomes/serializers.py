@@ -13,11 +13,14 @@ class BiomeSerializer(serializers.ModelSerializer):
 
         if len(value) < 3:
             raise serializers.ValidationError("Name must be at least 3 characters.")
-        if len(value) > 25:
-            raise serializers.ValidationError("Name cannot be more than 25 characters.")
+        if len(value) > 50:
+            raise serializers.ValidationError("Name cannot be more than 50 characters.")
         if not value[0].isalpha():
             raise serializers.ValidationError("Name must start with a letter.")
-        if Biome.objects.filter(name__iexact=value).exists():
+        existing = Biome.objects.filter(name__iexact=value)
+        if self.instance:
+            existing = existing.exclude(pk=self.instance.pk)
+        if existing.exists():
             raise serializers.ValidationError("A biome with this name already exists.")
 
         return value
