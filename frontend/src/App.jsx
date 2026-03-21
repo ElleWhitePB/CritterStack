@@ -1,8 +1,9 @@
 import { useState, useEffect, useRef } from "react";
-import { api } from "./services/api";
+import { api, biomeApi } from "./services/api";
 import {
   generateCreatureName,
   generateSpeciesName,
+  generateBiomeName,
 } from "./utils/nameGenerator";
 import Toast from "./components/Toast";
 import "./App.css";
@@ -97,20 +98,314 @@ function SectionNav({ activeSection, onChange }) {
   );
 }
 
+const isMissing = (val) => !val || val === "unknown";
+
 function BiomesSection() {
+  const [biomes, setBiomes] = useState([]);
+  const [selectedBiome, setSelectedBiome] = useState(null);
+  const [biomeId, setBiomeId] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [toast, setToast] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [editingField, setEditingField] = useState(null);
+  const [fieldDraft, setFieldDraft] = useState("");
+  const [newBiome, setNewBiome] = useState({
+    name: "", description: "", climate: "", peril_rating: "", magic_level: "",
+  });
+  const biomesPerPage = 6;
+  const biomeDetailRef = useRef(null);
+
+  const showToast = (message, type = "success") => setToast({ message, type });
+
+  const handleGenerateBiomeName = () =>
+    setNewBiome((prev) => ({ ...prev, name: generateBiomeName() }));
+
+  useEffect(() => {
+    if (selectedBiome && biomeDetailRef.current) {
+      biomeDetailRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }, [selectedBiome]);
+
+  const handleSaveField = async (field) => {
+    if (!fieldDraft.trim()) { showToast("Field cannot be empty", "error"); return; }
+    setLoading(true);
+    try {
+      const updated = await biomeApi.updateBiome(selectedBiome.id, { [field]: fieldDraft.trim() });
+      setSelectedBiome(updated);
+      setBiomes((prev) => prev.map((b) => (b.id === updated.id ? updated : b)));
+      setEditingField(null);
+      setFieldDraft("");
+      showToast("Field updated");
+    } catch (error) {
+      showToast(error.message, "error");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGetAll = async () => {
+    setLoading(true);
+    setSelectedBiome(null);
+    setCurrentPage(1);
+    try {
+      const data = await biomeApi.getAllBiomes({ includeInactive: true });
+      setBiomes(data);
+      showToast(`Found ${data.length} biome${data.length !== 1 ? "s" : ""}`);
+    } catch (error) {
+      showToast(error.message, "error");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGetById = async () => {
+    if (!biomeId) { showToast("Please enter a biome ID", "error"); return; }
+    setLoading(true);
+    setBiomes([]);
+    try {
+      const data = await biomeApi.getBiomeById(biomeId);
+      setSelectedBiome(data);
+      showToast(`${data.name} found`);
+    } catch {
+      showToast(`Could not fetch biome with ID ${biomeId}`, "error");
+      setSelectedBiome(null);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleCreate = async (e) => {
+    e.preventDefault();
+    if (!newBiome.name) { showToast("Name is required", "error"); return; }
+    if (!newBiome.description) { showToast("Field notes are required", "error"); return; }
+    setLoading(true);
+    try {
+      const payload = {
+        name: newBiome.name,
+        description: newBiome.description,
+        ...(newBiome.climate && { climate: newBiome.climate }),
+        ...(newBiome.peril_rating && { peril_rating: newBiome.peril_rating }),
+        ...(newBiome.magic_level && { magic_level: newBiome.magic_level }),
+      };
+      await biomeApi.createBiome(payload);
+      showToast(`${newBiome.name} registered!`);
+      setNewBiome({ name: "", description: "", climate: "", peril_rating: "", magic_level: "" });
+      if (biomes.length > 0) setBiomes(await biomeApi.getAllBiomes({ includeInactive: true }));
+    } catch (error) {
+      showToast(error.message, "error");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleToggleActive = async (biome) => {
+    setLoading(true);
+    try {
+      const updated = await biomeApi.updateBiome(biome.id, { is_active: !biome.is_active });
+      setBiomes((prev) => prev.map((b) => (b.id === updated.id ? updated : b)));
+      if (selectedBiome?.id === updated.id) setSelectedBiome(updated);
+      showToast(`${updated.name} marked ${updated.is_active ? "active" : "inactive"}`);
+    } catch (error) {
+      showToast(error.message, "error");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDelete = async (biome) => {
+    setLoading(true);
+    try {
+      await biomeApi.deleteBiome(biome.id);
+      showToast(`${biome.name} decommissioned`);
+      setBiomes((prev) => prev.filter((b) => b.id !== biome.id));
+      if (selectedBiome?.id === biome.id) { setSelectedBiome(null); setBiomeId(""); }
+    } catch (error) {
+      showToast(error.message, "error");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const totalPages = Math.ceil(biomes.length / biomesPerPage);
+  const currentBiomes = biomes.slice(
+    (currentPage - 1) * biomesPerPage,
+    currentPage * biomesPerPage,
+  );
+
   return (
     <div className="section-content">
+      {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
+
+      {/* Register Biome */}
       <section className="card card--biomes">
-        <div className="coming-soon">
-          <span className="coming-soon-icon">🗺️</span>
-          <h2>Biome Registry</h2>
-          <p className="coming-soon-text">
-            The Department&apos;s cartographers are still charting these
-            territories. Biome records are being transcribed from field notes
-            recovered during the Glimmerfen expedition.
-          </p>
-          <span className="coming-soon-badge">Service arriving in M2</span>
+        <h2>Register Biome</h2>
+        <form onSubmit={handleCreate} className="create-form">
+          <div className="form-group">
+            <label htmlFor="biome-name">Name</label>
+            <div className="name-input-group">
+              <input id="biome-name" type="text" className="input" placeholder="Enter biome name"
+                value={newBiome.name}
+                onChange={(e) => setNewBiome({ ...newBiome, name: e.target.value })} />
+              <button type="button" className="btn btn-help" onClick={handleGenerateBiomeName}>
+                🎲 a little help here
+              </button>
+            </div>
+          </div>
+          <div className="form-group">
+            <label htmlFor="biome-desc">Field Notes</label>
+            <textarea id="biome-desc" className="textarea" rows="3"
+              placeholder="Enter field notes for this biome"
+              value={newBiome.description}
+              onChange={(e) => setNewBiome({ ...newBiome, description: e.target.value })} />
+          </div>
+          <div className="form-row">
+            <div className="form-group" style={{ flex: 1 }}>
+              <label htmlFor="biome-climate">Climate (optional)</label>
+              <input id="biome-climate" type="text" className="input" placeholder="e.g. temperate"
+                value={newBiome.climate}
+                onChange={(e) => setNewBiome({ ...newBiome, climate: e.target.value })} />
+            </div>
+            <div className="form-group" style={{ flex: 1 }}>
+              <label htmlFor="biome-peril">Peril Rating (optional)</label>
+              <input id="biome-peril" type="text" className="input" placeholder="e.g. moderate"
+                value={newBiome.peril_rating}
+                onChange={(e) => setNewBiome({ ...newBiome, peril_rating: e.target.value })} />
+            </div>
+            <div className="form-group" style={{ flex: 1 }}>
+              <label htmlFor="biome-magic">Magic Level (optional)</label>
+              <input id="biome-magic" type="text" className="input" placeholder="e.g. high"
+                value={newBiome.magic_level}
+                onChange={(e) => setNewBiome({ ...newBiome, magic_level: e.target.value })} />
+            </div>
+          </div>
+          <button type="submit" className="btn btn-biome-primary" disabled={loading}>
+            {loading ? "Registering..." : "Register Biome"}
+          </button>
+        </form>
+      </section>
+
+      {/* All Biomes */}
+      <section className="card card--biomes">
+        <h2>All Biomes</h2>
+        <button className="btn btn-biome-primary" onClick={handleGetAll} disabled={loading}>
+          {loading ? "Loading..." : "Load All Biomes"}
+        </button>
+        {biomes.length > 0 && (
+          <>
+            <div className="pagination-info">
+              {`Showing ${(currentPage - 1) * biomesPerPage + 1}–${Math.min(currentPage * biomesPerPage, biomes.length)} of ${biomes.length} biomes`}
+            </div>
+            <div className="biome-grid">
+              {currentBiomes.map((biome) => (
+                <div key={biome.id}
+                  className={`biome-card${!biome.is_active ? " biome-card--inactive" : ""}${selectedBiome?.id === biome.id ? " biome-card--selected" : ""}`}
+                  onClick={() => { setSelectedBiome(biome); setBiomeId(biome.id); }}
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={(e) => e.key === "Enter" && (setSelectedBiome(biome), setBiomeId(biome.id))}>
+                  <div className="biome-card-header">
+                    <h3>{biome.name}</h3>
+                    <span className={`biome-badge biome-badge--${biome.is_active ? "active" : "inactive"}`}>
+                      {biome.is_active ? "Active" : "Inactive"}
+                    </span>
+                  </div>
+                  <p className="biome-card-desc">{biome.description}</p>
+                  <div className="biome-card-tags">
+                    {!isMissing(biome.climate) && <span className="biome-tag">🌤 {biome.climate}</span>}
+                    {!isMissing(biome.peril_rating) && <span className="biome-tag">⚠️ {biome.peril_rating}</span>}
+                    {!isMissing(biome.magic_level) && <span className="biome-tag">✨ {biome.magic_level}</span>}
+                  </div>
+                </div>
+              ))}
+            </div>
+            {totalPages > 1 && (
+              <div className="pagination">
+                <button className="btn btn-biome-secondary" disabled={currentPage === 1}
+                  onClick={() => setCurrentPage((p) => p - 1)}>← Previous</button>
+                <div className="page-numbers">
+                  {Array.from({ length: totalPages }, (_, i) => i + 1).map((n) => (
+                    <button key={n} onClick={() => setCurrentPage(n)}
+                      className={`btn btn-page${currentPage === n ? " active" : ""}`}>{n}</button>
+                  ))}
+                </div>
+                <button className="btn btn-biome-secondary" disabled={currentPage === totalPages}
+                  onClick={() => setCurrentPage((p) => p + 1)}>Next →</button>
+              </div>
+            )}
+          </>
+        )}
+      </section>
+
+      {/* Get by ID */}
+      <section className="card card--biomes" ref={biomeDetailRef}>
+        <h2>Get Biome by ID</h2>
+        <div className="form-row">
+          <input type="number" className="input" placeholder="Enter biome ID" value={biomeId}
+            onChange={(e) => setBiomeId(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && handleGetById()} />
+          <button className="btn btn-biome-secondary" onClick={handleGetById} disabled={loading}>
+            {loading ? "Loading..." : "Get by ID"}
+          </button>
         </div>
+        {selectedBiome && (
+          <div className="biome-detail">
+            <div className="detail-species-row">
+              <h3>{selectedBiome.name}</h3>
+              <div className="biome-detail-header-actions">
+                <span className={`biome-badge biome-badge--${selectedBiome.is_active ? "active" : "inactive"}`}>
+                  {selectedBiome.is_active ? "Active" : "Inactive"}
+                </span>
+                <button className="btn btn-biome-secondary btn-sm" disabled={loading}
+                  onClick={() => handleToggleActive(selectedBiome)}>
+                  {selectedBiome.is_active ? "Deactivate" : "Activate"}
+                </button>
+                <button className="btn btn-danger btn-danger--sm" disabled={loading}
+                  onClick={() => handleDelete(selectedBiome)}>
+                  🗑 Remove
+                </button>
+              </div>
+            </div>
+
+            <p><strong>ID:</strong> {selectedBiome.id}</p>
+            <div className="biome-description-box">
+              <div className="biome-description-header">
+                <span>📖</span>
+                <span>Field Notes</span>
+              </div>
+              <p>{selectedBiome.description}</p>
+            </div>
+
+            {[
+              { key: "climate", label: "Climate", icon: "🌤" },
+              { key: "peril_rating", label: "Peril Rating", icon: "⚠️" },
+              { key: "magic_level", label: "Magic Level", icon: "✨" },
+            ].map(({ key, label, icon }) => (
+              <div key={key} className="biome-field-row">
+                <strong>{label}:</strong>
+                {editingField === key ? (
+                  <div className="biome-field-edit">
+                    <input className="input" value={fieldDraft} placeholder={`Enter ${label.toLowerCase()}`}
+                      onChange={(e) => setFieldDraft(e.target.value)}
+                      onKeyDown={(e) => e.key === "Enter" && handleSaveField(key)} />
+                    <button className="btn btn-biome-secondary btn-sm" disabled={loading}
+                      onClick={() => handleSaveField(key)}>Save</button>
+                    <button className="btn btn-sm btn-cancel" onClick={() => setEditingField(null)}>Cancel</button>
+                  </div>
+                ) : isMissing(selectedBiome[key]) ? (
+                  <div className="biome-field-missing">
+                    <span className="biome-field-empty">Not recorded</span>
+                    <button className="btn btn-help btn-sm"
+                      onClick={() => { setEditingField(key); setFieldDraft(""); }}>
+                      {icon} Add {label}
+                    </button>
+                  </div>
+                ) : (
+                  <span className="biome-field-value">{selectedBiome[key]}</span>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
       </section>
     </div>
   );

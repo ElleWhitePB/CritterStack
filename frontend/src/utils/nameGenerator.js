@@ -45,6 +45,27 @@ function pick(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
 }
 
+const biomeFirstWords = [
+  "Whispering", "Ember", "Hollow", "Gloom", "Lumen",
+  "Ashen", "Drifting", "Murk", "Shiver", "Bramble",
+  "Sunken", "Fading", "Murmur", "Patchwork", "Scoria",
+  "Rime", "Tangle", "Verdant", "Cinder", "Pale",
+];
+
+const biomeSecondWords = [
+  "Fen", "Peaks", "Wood", "Caverns", "Expanse",
+  "Marsh", "Reach", "Vale", "Depths", "Shroud",
+  "Barrens", "Hollow", "Ridge", "Wastes", "Basin",
+  "Thicket", "Moors", "Shelf", "Passage", "Dell",
+];
+
+export function generateBiomeName() {
+  const first = pick(biomeFirstWords);
+  const second = pick(biomeSecondWords);
+  const withThe = Math.random() < 0.5;
+  return withThe ? `The ${first} ${second}` : `${first} ${second}`;
+}
+
 export function generateSpeciesName() {
   const descriptors = [
     // Soft natural descriptors (Group 1 + 2)
