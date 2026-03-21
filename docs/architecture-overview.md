@@ -15,7 +15,7 @@ Planned/core services:
 - **evolution-engine** – Runs background processes that evolve creatures over time.
 - **API gateway / edge** – A single public entrypoint for frontends and third parties.
 
-At the moment, **creature-service + frontend** are the parts that actually exist; the other services are planned and should follow the same patterns.
+At the moment, **creature-service, biome-service, and the frontend** are the parts that actually exist; the other services are planned and should follow the same patterns.
 
 ---
 
@@ -28,20 +28,25 @@ At the moment, **creature-service + frontend** are the parts that actually exist
   - `GET /creatures` – list creatures
   - `GET /creatures/:id` – creature detail (with species)
   - `POST /creatures` – create creature
+  - `DELETE /creatures/:id` – delete creature
   - `GET /creatures/species` – list species
   - `POST /creatures/species` – create species
   - `PATCH /creatures/species/:name` – update species lore only
 - **Database:** PostgreSQL via Prisma; owns the `Creature` and `Species` tables.
 - **Clients:** React frontend for now; future services should call via HTTP.
 
-### biome-service (planned)
+### biome-service
 
-- **Domain:** Biomes / locations, environmental tags, and what species prefer which areas.
-- **Responsibilities:**
-  - Define biomes (e.g. Emberwood, Hollow Fen, Luminous Thicket).
-  - Track which species are observed in which biomes.
-  - Provide read APIs for “where does this creature belong?” views.
-- **Database:** Its own Postgres schema or database; never writes directly into creature-service tables.
+- **Domain:** Biomes / locations, climates, peril ratings, magic levels, and active/inactive status.
+- **Endpoints:**
+  - `GET /health/` – health check
+  - `GET /biomes/` – list active biomes (add `?include_inactive=true` for all)
+  - `GET /biomes/{id}/` – biome detail
+  - `POST /biomes/` – create biome
+  - `PATCH /biomes/{id}/` – partial update (including is_active toggle)
+  - `DELETE /biomes/{id}/` – delete biome
+- **Database:** PostgreSQL (shared `critterstack` database); owns the `Biome` table.
+- **Clients:** React frontend; future services should call via HTTP.
 
 ### evolution-engine (planned)
 
@@ -78,7 +83,7 @@ Services do **not** reach into each other’s databases directly; they use APIs.
 - **creature-service** owns:
   - `Species` (canonical list of species + lore)
   - `Creature` (instances tied to species)
-- **biome-service** will own:
+- **biome-service** owns:
   - `Biome` and any join tables that relate species/creatures to locations.
 - **evolution-engine** will own:
   - Simulation runs, queued jobs, and derived/evolution state.
@@ -96,9 +101,11 @@ If another service needs species or creature data, it should **call creature-ser
   - Zod for request validation
   - Jest for tests
 
-- **biome-service** (proposed)
+- **biome-service**
 
-  - Mirror creature-service stack for consistency: Node.js + Express + Prisma + Postgres.
+  - Python 3.10+, Django 4.2, Django REST Framework
+  - PostgreSQL (shared `critterstack` database)
+  - python-dotenv, django-cors-headers
 
 - **evolution-engine** (proposed)
 
